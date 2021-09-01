@@ -45,7 +45,7 @@ namespace StringShear
         public override string ToString()
         {
             var dict = Serialize();
-            return "{" + string.Join(";", dict.Select(kvp => kvp.Key + ": " + kvp.Value)) + "}";
+            return "{" + string.Join(";", dict.Select(kvp => kvp.Key + ":" + kvp.Value)) + "}";
         }
 
         public static Stringy FromString(string str)
