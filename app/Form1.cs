@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 
 namespace StringShear
 {
@@ -37,12 +38,6 @@ namespace StringShear
         Pen maxVelPen;
         Pen maxAclPen;
         Pen maxPunchPen;
-
-        // Our own copies of the max strings.
-        Stringy m_maxPosStringy;
-        Stringy m_maxVelStringy;
-        Stringy m_maxAclStringy;
-        Stringy m_maxPunchStringy;
 
         public Form1()
         {
@@ -181,28 +176,29 @@ namespace StringShear
             int width = ClientRectangle.Width - settingsGroup.Width - padding * 2;
             int height = (ClientRectangle.Height - padding * (rectCount + 1)) / rectCount;
 
-            Stringy curStringy = null;
-            double time = 0.0;
-            double elapsedMs = 0.0;
-            foreach (string part in m_sim.ToString().Split('~'))
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (string part in m_sim.ToString().Split('\n'))
             {
                 int colon = part.IndexOf(':');
                 string name = part.Substring(0, colon);
                 string value = part.Substring(colon + 1);
-                switch (name)
-                {
-                    case "time": time = double.Parse(value);  break;
-                    case "elapsedMs": elapsedMs = double.Parse(value); break;
-
-                    case "string": curStringy = Stringy.FromString(value); break;
-                    case "maxPosString": m_maxPosStringy = Stringy.FromString(value); break;
-                    case "maxVelString": m_maxVelStringy = Stringy.FromString(value); break;
-                    case "maxAclString": m_maxAclStringy = Stringy.FromString(value); break;
-                    case "maxPunchString": m_maxPunchStringy = Stringy.FromString(value); break;
-
-                    default: throw new Exception("Unknown simulator state name: " + name);
-                }
+                dict.Add(name, value);
             }
+
+            double time = double.Parse(dict["time"]);
+            double elapsedMs = double.Parse(dict["elapsedMs"]);
+
+            Stringy curStringy = Stringy.FromString(dict["string"]);
+
+            Stringy maxPosStringy = Stringy.FromString(dict["maxPosString"]);
+            Stringy maxVelStringy = Stringy.FromString(dict["maxValString"]);
+            Stringy maxAclStringy = Stringy.FromString(dict["maxAclString"]);
+            Stringy maxPunchStringy = Stringy.FromString(dict["maxPunchString"]);
+
+            double maxPosTime = double.Parse(dict["maxPosTime"]);
+            double maxVelTime = double.Parse(dict["maxVelTime"]);
+            double maxAclTime = double.Parse(dict["maxAclTime"]);
+            double maxPunchTime = double.Parse(dict["maxPunchTime"]);
 
             Rectangle curRect = new Rectangle(padding, padding, width, height);
             DrawStringy("Position",
@@ -219,9 +215,9 @@ namespace StringShear
                         redPen,
                         g,
                         maxPosRect,
-                        m_maxPosStringy,
-                        m_maxPosStringy.GetMaxPos() / Simulation.cOscillatorAmplitude,
-                        m_sim.GetMaxPosTime(),
+                        maxPosStringy,
+                        maxPosStringy.GetMaxPos() / Simulation.cOscillatorAmplitude,
+                        maxPosTime,
                         1);
 
             Rectangle maxVelRect = new Rectangle(padding, padding * 3 + height * 2, width, height);
@@ -229,9 +225,9 @@ namespace StringShear
                         greenPen,
                         g,
                         maxVelRect,
-                        m_maxVelStringy,
-                        m_maxVelStringy.GetMaxVel(),
-                        m_sim.GetMaxVelTime(),
+                        maxVelStringy,
+                        maxVelStringy.GetMaxVel(),
+                        maxVelTime,
                         2);
 
             Rectangle maxAclRect = new Rectangle(padding, padding * 4 + height * 3, width, height);
@@ -239,9 +235,9 @@ namespace StringShear
                         bluePen,
                         g,
                         maxAclRect,
-                        m_maxAclStringy,
-                        m_maxAclStringy.GetMaxAcl(),
-                        m_sim.GetMaxAclTime(),
+                        maxAclStringy,
+                        maxAclStringy.GetMaxAcl(),
+                        maxAclTime,
                         3);
 
             Rectangle maxPunchRect = new Rectangle(padding, padding * 5 + height * 4, width, height);
@@ -249,9 +245,9 @@ namespace StringShear
                         purplePen,
                         g,
                         maxPunchRect,
-                        m_maxPunchStringy,
-                        m_maxPunchStringy.GetMaxPunch(),
-                        m_sim.GetMaxPunchTime(),
+                        maxPunchStringy,
+                        maxPunchStringy.GetMaxPunch(),
+                        maxPunchTime,
                         4);
 
             double curTime = Math.Max(time, 0.000001);
@@ -419,28 +415,34 @@ namespace StringShear
         // Update the simulation with the UI settings
         void UpdateSettings()
         {
+            string settings = "";
+
             double timeSliceMs = 1.0;
             double.TryParse(timeSliceEdit.Text, out timeSliceMs);
-            m_sim.SetTimeSlice(timeSliceMs / 1000.0);
+            settings += "timeSlice:" + timeSliceMs + "\n";
 
+            int delayMs = 0;
+            int delayMod = 0;
             if (speedComboBox.Text == "All Out")
             {
-                m_sim.SetDelay(-1);
+                delayMs = -1;
             }
             else if (speedComboBox.Text == "Fast")
             {
-                m_sim.SetDelay(0);
+                delayMs = 0;
             }
             else if (speedComboBox.Text == "Medium")
             {
-                m_sim.SetDelay(1);
-                m_sim.SetDelayMod(10);
+                delayMs = 1;
+                delayMod = 10;
             }
             else if (speedComboBox.Text == "Slow")
             {
-                m_sim.SetDelay(1);
-                m_sim.SetDelayMod(2);
+                delayMs = 1;
+                delayMod = 2;
             }
+            settings += "delayMs:" + delayMs + "\n";
+            settings += "delayMod:" + delayMod + "\n";
 
             double tension = 0.0;
             bool bValidTension = true;
@@ -453,32 +455,26 @@ namespace StringShear
                 }
             }
             if (bValidTension)
-            {
-                m_sim.SetTension(tension);
-            }
+                settings += "tension:" + tension + "\n";
 
-            m_sim.SetDamping(1);
+            settings += "damping:" + 1 + "\n";
 
-            m_sim.SetRightEnabled(rightEnabledCheck.Checked);
-            m_sim.SetRightFrequencies(GetFrequencies(rightFrequenciesEdit.Lines));
+            settings += "rightEnabled:" + rightEnabledCheck.Checked + "\n";
+            settings += "rightFrequencies:" +
+                string.Join(",", GetFrequencies(rightFrequenciesEdit.Lines).Select(x => x.ToString()));
 
-            m_sim.SetLeftEnabled(leftEnabledCheck.Checked);
-            m_sim.SetLeftFrequencies(GetFrequencies(leftFrequenciesEdit.Lines));
+            settings += "leftEnabled:" + leftEnabledCheck.Checked + "\n";
+            settings += "leftFrequencies:" +
+                string.Join(",", GetFrequencies(leftFrequenciesEdit.Lines).Select(x => x.ToString()));
 
-            m_sim.SetJustPulse(justPulseCheck.Checked);
-            m_sim.SetJustHalfPulse(justHalfPulseCheck.Checked);
+            settings += "justPulse:" + justPulseCheck.Checked + "\n";
+            settings += "justHalfPulse:" + justHalfPulseCheck.Checked + "\n";
 
             double outOfPhase = 0.0;
             double.TryParse(outOfPhaseEdit.Text, out outOfPhase);
-            m_sim.SetOutOfPhase(outOfPhase);
-        }
+            settings += "outOfPhase:" + outOfPhase + "\n";
 
-        void ResetMaxStrings()
-        {
-            m_maxPosStringy = null;
-            m_maxVelStringy = null;
-            m_maxAclStringy = null;
-            m_maxPunchStringy = null;
+            m_sim.ApplySettings(settings);
         }
 
         void timer1_Tick(object obj, EventArgs args)
@@ -499,7 +495,7 @@ namespace StringShear
             bool bPause = pauseRunButton.Text == "Pause";
             pauseRunButton.Text = bPause ? "Run" : "Pause";
 
-            m_sim.SetPaused(bPause);
+            m_sim.ApplySettings("paused:" + bPause);
         }
 
         void resetButton_Click(object obj, EventArgs args)
@@ -509,8 +505,7 @@ namespace StringShear
             if (pauseRunButton.Text == "Pause")
                 pauseRunButton_Click(null, null);
 
-            m_sim.Reset();
-            ResetMaxStrings();
+            m_sim.ApplySettings("reset:true");
         }
 
         // Keep the settings in the top-right corner as the main form is resized
@@ -541,8 +536,7 @@ namespace StringShear
 
         void resetMaxButton_Click(object obj, EventArgs args)
         {
-            m_sim.ResetMaxes();
-            ResetMaxStrings();
+            m_sim.ApplySettings("resetMaxes:true");
         }
 
         void copyHeadersButton_Click(object obj, EventArgs args)
@@ -568,9 +562,6 @@ namespace StringShear
 
         void copyStatsButton_Click(object obj, EventArgs args)
         {
-            Stringy curStringy = m_sim.GetCurStringy();
-            double curTime = m_sim.GetTime();
-
             string strLeftFrequencies =
                 leftEnabledCheck.Checked
                 ? string.Join(", ", leftFrequenciesEdit.Lines)
@@ -581,6 +572,24 @@ namespace StringShear
                 ? string.Join(", ", rightFrequenciesEdit.Lines)
                 : "0.0";
 
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (string part in m_sim.ToString().Split('\n'))
+            {
+                int colon = part.IndexOf(':');
+                string name = part.Substring(0, colon);
+                string value = part.Substring(colon + 1);
+                dict.Add(name, value);
+            }
+
+            double time = double.Parse(dict["time"]);
+
+            Stringy curStringy = Stringy.FromString(dict["string"]);
+
+            Stringy maxPosStringy = Stringy.FromString(dict["maxPosString"]);
+            Stringy maxVelStringy = Stringy.FromString(dict["maxValString"]);
+            Stringy maxAclStringy = Stringy.FromString(dict["maxAclString"]);
+            Stringy maxPunchStringy = Stringy.FromString(dict["maxPunchString"]);
+
             // Build the tab-delimited string.
             string strStats =
                     timeSliceEdit.Text + "\t" +
@@ -588,12 +597,12 @@ namespace StringShear
                     outOfPhaseEdit.Text + "\t" +
                     strLeftFrequencies + "\t" +
                     strRightFrequencies + "\t" +
-                    (m_maxPosStringy != null ? m_maxPosStringy.GetMaxPos().ToString() : "0.0") + "\t" +
-                    (m_maxVelStringy != null ? m_maxVelStringy.GetMaxVel().ToString() : "0.0") + "\t" +
-                    (m_maxAclStringy != null ? m_maxAclStringy.GetMaxAcl().ToString() : "0.0") + "\t" +
-                    (m_maxPunchStringy != null ? m_maxPunchStringy.GetMaxPunch().ToString() : "0.0") + "\t" +
-                    (curStringy.GetStartWork() / curTime).ToString() + "\t" +
-                    (curStringy.GetEndWork() / curTime).ToString()
+                    (maxPosStringy != null ? maxPosStringy.GetMaxPos().ToString() : "0.0") + "\t" +
+                    (maxVelStringy != null ? maxVelStringy.GetMaxVel().ToString() : "0.0") + "\t" +
+                    (maxAclStringy != null ? maxAclStringy.GetMaxAcl().ToString() : "0.0") + "\t" +
+                    (maxPunchStringy != null ? maxPunchStringy.GetMaxPunch().ToString() : "0.0") + "\t" +
+                    (curStringy.GetStartWork() / time).ToString() + "\t" +
+                    (curStringy.GetEndWork() / time).ToString()
                     ;
 
             copyEdit.Text = strStats;

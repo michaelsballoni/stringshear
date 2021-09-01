@@ -45,13 +45,13 @@ namespace StringShear
         public override string ToString()
         {
             var dict = Serialize();
-            return "{" + string.Join("?", dict.Select(kvp => kvp.Key + ": " + kvp.Value)) + "}";
+            return "{" + string.Join(";", dict.Select(kvp => kvp.Key + ": " + kvp.Value)) + "}";
         }
 
         public static Stringy FromString(string str)
         {
             var dict = new Dictionary<string, string>();
-            foreach (string line in str.Trim('{', '}').Split('?'))
+            foreach (string line in str.Trim('{', '}').Split(';'))
             {
                 int colon = line.IndexOf(':');
                 string name = line.Substring(0, colon);

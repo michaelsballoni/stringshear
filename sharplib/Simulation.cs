@@ -90,16 +90,30 @@ namespace StringShear
             }
         }
 
-        public void UpdateSettings(Dictionary<string, string> settings)
+        public void ApplySettings(string str)
         {
+            var settings = new Dictionary<string, string>();
+            foreach (string line in str.Split('\n'))
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                int colon = line.IndexOf(':');
+                string name = line.Substring(0, colon);
+                string value = line.Substring(colon + 1);
+                settings.Add(name, value);
+            }
+
             lock (this)
             {
                 foreach (var kvp in settings)
                 {
                     switch (kvp.Key)
                     {
+                        case "reset": if (bool.Parse(kvp.Value)) Reset(); break;
+                        case "resetMaxes": if (bool.Parse(kvp.Value)) ResetMaxes(); break;
                         case "paused": m_bPaused = bool.Parse(kvp.Value); break;
-                        case "delay": m_delayMs = int.Parse(kvp.Value); break;
+                        case "delayMs": m_delayMs = int.Parse(kvp.Value); break;
                         case "delayMod": m_delayMod = int.Parse(kvp.Value); break;
                         case "timeSlice": m_timeSlice = double.Parse(kvp.Value); break;
                         case "tension": m_tension = double.Parse(kvp.Value); break;
@@ -140,7 +154,7 @@ namespace StringShear
                 state.Add("maxAclString", m_maxAclString.ToString());
                 state.Add("maxPunchString", m_maxPunchString.ToString());
             }
-            return string.Join("~", state.Select(kvp => kvp.Key + ": " + kvp.Value));
+            return string.Join("\n", state.Select(kvp => kvp.Key + ":" + kvp.Value));
         }
 
         public void Update()
