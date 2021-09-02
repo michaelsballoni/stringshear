@@ -45,13 +45,13 @@ namespace StringShear
         public override string ToString()
         {
             var dict = Serialize();
-            return "{" + string.Join(";", dict.Select(kvp => kvp.Key + ":" + kvp.Value)) + "}";
+            return string.Join(";", dict.Select(kvp => kvp.Key + ":" + kvp.Value));
         }
 
         public static Stringy FromString(string str)
         {
             var dict = new Dictionary<string, string>();
-            foreach (string line in str.Trim('{', '}').Split(';'))
+            foreach (string line in str.Split(';'))
             {
                 int colon = line.IndexOf(':');
                 string name = line.Substring(0, colon);
@@ -95,28 +95,28 @@ namespace StringShear
 
             Particle[] particles = dict["particles"].Split('|').Select(s => Particle.FromString(s)).ToArray();
 
-            Stringy str = new Stringy(particles.Length, length);
+            Stringy stringy = new Stringy(particles.Length, length);
             
-            str.m_particles = particles;
-            str.m_length = length;
+            stringy.m_particles = particles;
+            stringy.m_length = length;
 
-            str.m_maxPos = double.Parse(dict["maxPos"]);
-            str.m_maxVel = double.Parse(dict["maxVel"]);
-            str.m_maxAcl = double.Parse(dict["maxAcl"]);
-            str.m_maxPunch = double.Parse(dict["maxPunch"]);
+            stringy.m_maxPos = double.Parse(dict["maxPos"]);
+            stringy.m_maxVel = double.Parse(dict["maxVel"]);
+            stringy.m_maxAcl = double.Parse(dict["maxAcl"]);
+            stringy.m_maxPunch = double.Parse(dict["maxPunch"]);
 
-            str.m_maxPosIndex = int.Parse(dict["maxPosIndex"]);
-            str.m_maxVelIndex = int.Parse(dict["maxVelIndex"]);
-            str.m_maxAclIndex = int.Parse(dict["maxAclIndex"]);
-            str.m_maxPunchIndex = int.Parse(dict["maxPunchIndex"]);
+            stringy.m_maxPosIndex = int.Parse(dict["maxPosIndex"]);
+            stringy.m_maxVelIndex = int.Parse(dict["maxVelIndex"]);
+            stringy.m_maxAclIndex = int.Parse(dict["maxAclIndex"]);
+            stringy.m_maxPunchIndex = int.Parse(dict["maxPunchIndex"]);
 
-            str.m_startWork = double.Parse(dict["startWork"]);
-            str.m_endWork = double.Parse(dict["endWork"]);
+            stringy.m_startWork = double.Parse(dict["startWork"]);
+            stringy.m_endWork = double.Parse(dict["endWork"]);
 
-            str.m_maxStartWork = double.Parse(dict["maxStartWork"]);
-            str.m_maxEndWork = double.Parse(dict["maxEndWork"]);
+            stringy.m_maxStartWork = double.Parse(dict["maxStartWork"]);
+            stringy.m_maxEndWork = double.Parse(dict["maxEndWork"]);
 
-            return str;
+            return stringy;
         }
 
         public Stringy Clone()

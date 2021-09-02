@@ -177,12 +177,15 @@ namespace StringShear
             int height = (ClientRectangle.Height - padding * (rectCount + 1)) / rectCount;
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (string part in m_sim.ToString().Split('\n'))
             {
-                int colon = part.IndexOf(':');
-                string name = part.Substring(0, colon);
-                string value = part.Substring(colon + 1);
-                dict.Add(name, value);
+                string simState = m_sim.ToString();
+                foreach (string part in simState.Split('\n'))
+                {
+                    int colon = part.IndexOf(':');
+                    string name = part.Substring(0, colon);
+                    string value = part.Substring(colon + 1);
+                    dict.Add(name, value);
+                }
             }
 
             double time = double.Parse(dict["time"]);
@@ -191,7 +194,7 @@ namespace StringShear
             Stringy curStringy = Stringy.FromString(dict["string"]);
 
             Stringy maxPosStringy = Stringy.FromString(dict["maxPosString"]);
-            Stringy maxVelStringy = Stringy.FromString(dict["maxValString"]);
+            Stringy maxVelStringy = Stringy.FromString(dict["maxVelString"]);
             Stringy maxAclStringy = Stringy.FromString(dict["maxAclString"]);
             Stringy maxPunchStringy = Stringy.FromString(dict["maxPunchString"]);
 
@@ -419,7 +422,7 @@ namespace StringShear
 
             double timeSliceMs = 1.0;
             double.TryParse(timeSliceEdit.Text, out timeSliceMs);
-            settings += "timeSlice:" + timeSliceMs + "\n";
+            settings += "timeSlice:" + (timeSliceMs / 1000.0) + "\n";
 
             int delayMs = 0;
             int delayMod = 0;
@@ -461,11 +464,13 @@ namespace StringShear
 
             settings += "rightEnabled:" + rightEnabledCheck.Checked + "\n";
             settings += "rightFrequencies:" +
-                string.Join(",", GetFrequencies(rightFrequenciesEdit.Lines).Select(x => x.ToString()));
+                string.Join(",", GetFrequencies(rightFrequenciesEdit.Lines).Select(x => x.ToString()))
+                + "\n";
 
             settings += "leftEnabled:" + leftEnabledCheck.Checked + "\n";
             settings += "leftFrequencies:" +
-                string.Join(",", GetFrequencies(leftFrequenciesEdit.Lines).Select(x => x.ToString()));
+                string.Join(",", GetFrequencies(leftFrequenciesEdit.Lines).Select(x => x.ToString()))
+                + "\n";
 
             settings += "justPulse:" + justPulseCheck.Checked + "\n";
             settings += "justHalfPulse:" + justHalfPulseCheck.Checked + "\n";

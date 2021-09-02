@@ -15,35 +15,28 @@ namespace StringShear
         public double punch;
         public double nextNeighborFactor;
 
-        public Particle(double _x)
+        public Particle(double _x, double _y = 0, double _vel = 0, double _acl = 0, double _punch = 0, double _next = 0)
         {
             x = _x;
-            y = 0;
-            vel = 0;
-            acl = 0;
-            punch = 0;
-            nextNeighborFactor = 0;
+            y = _y;
+            vel = _vel;
+            acl = _acl;
+            punch = _punch;
+            nextNeighborFactor = _next;
         }
 
         public override string ToString()
         {
-            return $"({x},{y},{vel},{acl},{punch},{nextNeighborFactor})";
+            return $"{x},{y},{vel},{acl},{punch},{nextNeighborFactor}";
         }
 
         public static Particle FromString(string str)
         {
-            double[] vals = str.Trim('(', ')').Split(',').Select(x => double.Parse(x)).ToArray();
+            double[] vals = str.Split(',').Select(x => double.Parse(x)).ToArray();
             if (vals.Length != 6)
                 throw new Exception("Particle parsing fails: " + str);
 
-            int i = 0;
-            Particle p = new Particle(vals[i++]);
-            p.y = vals[i++];
-            p.vel = vals[i++];
-            p.acl = vals[i++];
-            p.punch = vals[i++];
-            p.nextNeighborFactor = vals[i++];
-            return p;
+            return new Particle(vals[0], vals[1], vals[2], vals[3], vals[4], vals[5]);
         }
 
         public double GetVal(int index)
