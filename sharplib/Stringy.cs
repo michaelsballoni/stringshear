@@ -170,7 +170,6 @@ namespace StringShear
         // Update the particles of this given new endpoints, an elapsed time, and a tension
         // The tension defines how much acceleration the particles receive due to distance from
         // neighboring particles
-        // Returns true if a string shear is detected
         public
             void Update
             (
