@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Net;
+using System.IO;
 using System.Linq;
 
 namespace StringShear
@@ -29,8 +31,6 @@ namespace StringShear
         double m_maxAclTime;
         double m_maxPunchTime;
 
-        Thread m_thread;
-
         Stringy m_string;
         Stringy m_maxPosString;
         Stringy m_maxVelString;
@@ -46,12 +46,16 @@ namespace StringShear
         bool m_bJustHalfPulse;
         double m_outOfPhase;
 
-        Stopwatch m_stopwatch;
-        double m_elapsedMs;
+        Stopwatch m_computeStopwatch;
+        double m_computeElapsedMs;
+
+        Stopwatch m_outputStopwatch;
+        double m_outputElapsedMs;
 
         public Simulation()
         {
-            m_stopwatch = new Stopwatch();
+            m_computeStopwatch = new Stopwatch();
+            m_outputStopwatch = new Stopwatch();
 
             m_string = new Stringy(cParticleCount, cStringLength);
             m_maxPosString = m_string.Clone();
@@ -62,31 +66,49 @@ namespace StringShear
             m_rightFrequencies = new double[0];
             m_leftFrequencies = new double[0];
 
-            m_thread = new Thread(Run);
+            new Thread(Run).Start();
+            new Thread(RunServer).Start();
         }
 
-        public void Startup()
-        {
-            m_thread.Start();
-        }
-
-        public void Shutdown()
-        {
-            m_thread.Abort();
-        }
-
-        // Implement the worker thread routine to constantly update the situation
-        // This sleeps when paused to not burn up the CPU all the time
         private void Run(object obj)
         {
-            try
+            while (true)
+                Update();
+        }
+
+        public void RunServer()
+        {
+            Console.Write("Setting up server...");
+            HttpListener listener = new HttpListener();
+            listener.Prefixes.Add($"http://localhost:9914/");
+            listener.Start();
+            Console.WriteLine("done!");
+            while (true)
             {
-                while (true)
-                    Update();
-            }
-            catch (ThreadAbortException)
-            {
-                return;
+#if DEBUG
+                Console.Write("?");
+#endif
+                var ctxt = listener.GetContext();
+#if DEBUG
+                Console.Write(".");
+#endif
+                if (ctxt.Request.HttpMethod == "GET")
+                {
+                    string state = ToString();
+                    using (StreamWriter writer = new StreamWriter(ctxt.Response.OutputStream))
+                        writer.Write(state);
+                }
+                else
+                {
+                    string settings;
+                    using (StreamReader reader = new StreamReader(ctxt.Request.InputStream))
+                        settings = reader.ReadToEnd();
+                    ctxt.Response.OutputStream.Close();
+                    ApplySettings(settings);
+                }
+#if DEBUG
+                Console.Write("!");
+#endif
             }
         }
 
@@ -137,11 +159,13 @@ namespace StringShear
 
         public override string ToString()
         {
-            var state = new Dictionary<string, string>();
+            string stateStr;
             lock (this)
             {
+                m_outputStopwatch.Restart();
+                var state = new Dictionary<string, string>();
                 state.Add("time", m_time.ToString());
-                state.Add("elapsedMs", m_elapsedMs.ToString());
+                state.Add("elapsedMs", m_computeElapsedMs.ToString());
 
                 state.Add("maxPosTime", m_maxPosTime.ToString());
                 state.Add("maxVelTime", m_maxVelTime.ToString());
@@ -153,15 +177,26 @@ namespace StringShear
                 state.Add("maxVelString", m_maxVelString.ToString());
                 state.Add("maxAclString", m_maxAclString.ToString());
                 state.Add("maxPunchString", m_maxPunchString.ToString());
+
+                stateStr = string.Join("\n", state.Select(kvp => kvp.Key + ":" + kvp.Value));
+                m_outputElapsedMs = m_outputStopwatch.Elapsed.TotalMilliseconds;
             }
-            return string.Join("\n", state.Select(kvp => kvp.Key + ":" + kvp.Value));
+            return stateStr;
+        }
+
+        public double ComputeElapsedMs
+        {
+            get { lock (this) return m_computeElapsedMs; }
+        }
+
+        public double OutputElapsedMs
+        {
+            get { lock (this) return m_outputElapsedMs; }
         }
 
         public void Update()
         {
             m_simulationCycle++;
-
-            m_stopwatch.Restart();
 
             // Delay.  Outside the thread safety lock.
             int delayMs = 0;
@@ -190,12 +225,14 @@ namespace StringShear
             if (m_bPaused)
             {
                 Thread.Sleep(200);
-                m_elapsedMs = 0.0;
+                m_computeElapsedMs = 0.0;
                 return;
             }
 
             lock (this)
             {
+                m_computeStopwatch.Restart();
+
                 double startPos = 0.0;
                 if (m_bLeftEnabled)
                 {
@@ -224,7 +261,7 @@ namespace StringShear
                     }
                 }
 
-                double timeSlice = m_timeSlice >= 0.0 ? m_timeSlice : m_elapsedMs / 1000.0;
+                double timeSlice = m_timeSlice >= 0.0 ? m_timeSlice : m_computeElapsedMs / 1000.0;
                 m_string.Update
                 (
                     startPos,
@@ -262,7 +299,7 @@ namespace StringShear
                 }
 
                 m_time += timeSlice;
-                m_elapsedMs = m_stopwatch.Elapsed.TotalMilliseconds;
+                m_computeElapsedMs = m_computeStopwatch.Elapsed.TotalMilliseconds;
             }
         }
 

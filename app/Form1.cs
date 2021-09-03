@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using System.Net;
+using System.Net.Cache;
 using System.Diagnostics;
 using System.Linq;
 
@@ -12,7 +14,6 @@ namespace StringShear
     {
         AppSettings m_settings;
 
-        Simulation m_sim;
         Tuning m_tuning;
 
         BufferedGraphics m_bufferedGraphics;
@@ -39,6 +40,8 @@ namespace StringShear
         Pen maxAclPen;
         Pen maxPunchPen;
 
+        WebClient m_simClient;
+
         public Form1()
         {
             InitializeComponent();
@@ -51,8 +54,6 @@ namespace StringShear
 
             // Capture the initial form width for use when resizing
             lastFormWidth = Width;
-
-            m_sim = new Simulation();
 
             m_tuning = new Tuning();
 
@@ -77,11 +78,12 @@ namespace StringShear
             maxAclPen = new Pen(Color.Blue, 4);
             maxPunchPen = new Pen(Color.Purple, 4);
 
+            m_simClient = new WebClient();
+            m_simClient.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore);
+
             LoadSettings();
 
             Form1_SizeChanged(null, null);
-
-            m_sim.Startup();
         }
 
         string SettingsFilePath
@@ -165,6 +167,11 @@ namespace StringShear
             }
         }
 
+        string SimState
+        {
+            get { lock (m_simClient) return m_simClient.DownloadString("http://localhost:9914/"); }
+        }
+
         void UpdateDisplay()
         {
             Graphics g = m_bufferedGraphics.Graphics;
@@ -178,8 +185,7 @@ namespace StringShear
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
             {
-                string simState = m_sim.ToString();
-                foreach (string part in simState.Split('\n'))
+                foreach (string part in SimState.Split('\n'))
                 {
                     int colon = part.IndexOf(':');
                     string name = part.Substring(0, colon);
@@ -479,7 +485,13 @@ namespace StringShear
             double.TryParse(outOfPhaseEdit.Text, out outOfPhase);
             settings += "outOfPhase:" + outOfPhase + "\n";
 
-            m_sim.ApplySettings(settings);
+            ApplySimSettings(settings);
+        }
+
+        void ApplySimSettings(string settings)
+        {
+            lock (m_simClient)
+                m_simClient.UploadString("http://localhost:9914/", settings);
         }
 
         void timer1_Tick(object obj, EventArgs args)
@@ -489,7 +501,6 @@ namespace StringShear
 
         void Form1_FormClosed(object obj, FormClosedEventArgs args)
         {
-            m_sim.Shutdown();
             SaveSettings();
         }
 
@@ -500,7 +511,7 @@ namespace StringShear
             bool bPause = pauseRunButton.Text == "Pause";
             pauseRunButton.Text = bPause ? "Run" : "Pause";
 
-            m_sim.ApplySettings("paused:" + bPause);
+            ApplySimSettings("paused:" + bPause);
         }
 
         void resetButton_Click(object obj, EventArgs args)
@@ -510,7 +521,7 @@ namespace StringShear
             if (pauseRunButton.Text == "Pause")
                 pauseRunButton_Click(null, null);
 
-            m_sim.ApplySettings("reset:true");
+            ApplySimSettings("reset:true");
         }
 
         // Keep the settings in the top-right corner as the main form is resized
@@ -529,9 +540,8 @@ namespace StringShear
                 BufferedGraphicsManager.Current.MaximumBuffer = new Size(displayGroup.Width + 1, displayGroup.Height + 1);
                 m_bufferedGraphics = BufferedGraphicsManager.Current.Allocate(displayGroup.CreateGraphics(), new Rectangle(0, 0, displayGroup.Width, displayGroup.Height));
             }
-            catch (Exception exp)
+            catch
             {
-                MessageBox.Show($"Resize error:\n\n{exp}");
             }
 
             lastFormWidth = Width;
@@ -541,7 +551,7 @@ namespace StringShear
 
         void resetMaxButton_Click(object obj, EventArgs args)
         {
-            m_sim.ApplySettings("resetMaxes:true");
+            ApplySimSettings("resetMaxes:true");
         }
 
         void copyHeadersButton_Click(object obj, EventArgs args)
@@ -578,7 +588,7 @@ namespace StringShear
                 : "0.0";
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (string part in m_sim.ToString().Split('\n'))
+            foreach (string part in SimState.Split('\n'))
             {
                 int colon = part.IndexOf(':');
                 string name = part.Substring(0, colon);
