@@ -3,6 +3,7 @@
 // and the work done to move the end points, and the max work required to move the end points
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Linq;
 
 namespace StringShear
@@ -44,8 +45,28 @@ namespace StringShear
 
         public override string ToString()
         {
-            var dict = Serialize();
-            return string.Join(";", dict.Select(kvp => kvp.Key + ":" + kvp.Value));
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("particles", string.Join("|", m_particles.Select(p => p.ToString())));
+            sb.AppendFormat("length", m_length);
+
+            sb.AppendFormat("maxPos", m_maxPos);
+            sb.AppendFormat("maxVel", m_maxVel);
+            sb.AppendFormat("maxAcl", m_maxAcl);
+            sb.AppendFormat("maxPunch", m_maxPunch);
+
+            sb.AppendFormat("maxPosIndex", m_maxPosIndex);
+            sb.AppendFormat("maxVelIndex", m_maxVelIndex);
+            sb.AppendFormat("maxAclIndex", m_maxAclIndex);
+            sb.AppendFormat("maxPunchIndex", m_maxPunchIndex);
+
+            sb.AppendFormat("startWork", m_startWork);
+            sb.AppendFormat("endWork", m_endWork);
+
+            sb.AppendFormat("maxStartWork", m_maxStartWork);
+            sb.AppendFormat("maxEndWork", m_maxEndWork);
+
+            return sb.ToString();
         }
 
         public static Stringy FromString(string str)
@@ -53,44 +74,16 @@ namespace StringShear
             var dict = new Dictionary<string, string>();
             foreach (string line in str.Split(';'))
             {
+                if (line.Length == 0)
+                    continue;
+
                 int colon = line.IndexOf(':');
                 string name = line.Substring(0, colon);
                 string value = line.Substring(colon + 1);
+
                 dict.Add(name, value);
             }
 
-            var stringy = Deserialize(dict);
-            return stringy;
-        }
-
-        public Dictionary<string, string> Serialize()
-        {
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-
-            dict.Add("particles", string.Join("|", m_particles.Select(p => p.ToString())));
-            dict.Add("length", m_length.ToString());
-
-            dict.Add("maxPos", m_maxPos.ToString());
-            dict.Add("maxVel", m_maxVel.ToString());
-            dict.Add("maxAcl", m_maxAcl.ToString());
-            dict.Add("maxPunch", m_maxPunch.ToString());
-
-            dict.Add("maxPosIndex", m_maxPosIndex.ToString());
-            dict.Add("maxVelIndex", m_maxVelIndex.ToString());
-            dict.Add("maxAclIndex", m_maxAclIndex.ToString());
-            dict.Add("maxPunchIndex", m_maxPunchIndex.ToString());
-
-            dict.Add("startWork", m_startWork.ToString());
-            dict.Add("endWork", m_endWork.ToString());
-
-            dict.Add("maxStartWork", m_maxStartWork.ToString());
-            dict.Add("maxEndWork", m_maxEndWork.ToString());
-
-            return dict;
-        }
-
-        public static Stringy Deserialize(Dictionary<string, string> dict)
-        {
             double length = double.Parse(dict["length"]);
 
             Particle[] particles = dict["particles"].Split('|').Select(s => Particle.FromString(s)).ToArray();

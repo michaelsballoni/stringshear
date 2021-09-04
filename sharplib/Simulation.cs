@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Net;
 using System.IO;
+using System.Text;
 using System.Linq;
 
 namespace StringShear
@@ -159,39 +160,39 @@ namespace StringShear
 
         public override string ToString()
         {
-            string stateStr;
+            StringBuilder sb = new StringBuilder();
             lock (this)
             {
                 m_outputStopwatch.Restart();
-                var state = new Dictionary<string, string>();
-                state.Add("time", m_time.ToString());
-                state.Add("elapsedMs", m_computeElapsedMs.ToString());
 
-                state.Add("maxPosTime", m_maxPosTime.ToString());
-                state.Add("maxVelTime", m_maxVelTime.ToString());
-                state.Add("maxAclTime", m_maxAclTime.ToString());
-                state.Add("maxPunchTime", m_maxPunchTime.ToString());
+                sb.AppendFormat("time:{0}\n", m_time);
+                sb.AppendFormat("elapsedMs:{0}\n", m_computeElapsedMs);
 
-                state.Add("string", m_string.ToString());
-                state.Add("maxPosString", m_maxPosString.ToString());
-                state.Add("maxVelString", m_maxVelString.ToString());
-                state.Add("maxAclString", m_maxAclString.ToString());
-                state.Add("maxPunchString", m_maxPunchString.ToString());
+                sb.AppendFormat("maxPosTime:{0}\n", m_maxPosTime);
+                sb.AppendFormat("maxVelTime:{0}\n", m_maxVelTime);
+                sb.AppendFormat("maxAclTime:{0}\n", m_maxAclTime);
+                sb.AppendFormat("maxPunchTime:{0}\n", m_maxPunchTime);
 
-                stateStr = string.Join("\n", state.Select(kvp => kvp.Key + ":" + kvp.Value));
+                sb.AppendFormat("string:{0}\n", m_string);
+                sb.AppendFormat("maxPosString:{0}\n", m_maxPosString);
+                sb.AppendFormat("maxVelString:{0}\n", m_maxVelString);
+                sb.AppendFormat("maxAclString:{0}\n", m_maxAclString);
+                sb.AppendFormat("maxPunchString:{0}\n", m_maxPunchString);
+
                 m_outputElapsedMs = m_outputStopwatch.Elapsed.TotalMilliseconds;
             }
+
+            string stateStr = sb.ToString();
             return stateStr;
         }
 
-        public double ComputeElapsedMs
+        public void GetElapsed(ref double computeMs, ref double outputMs)
         {
-            get { lock (this) return m_computeElapsedMs; }
-        }
-
-        public double OutputElapsedMs
-        {
-            get { lock (this) return m_outputElapsedMs; }
+            lock (this)
+            {
+                computeMs = m_computeElapsedMs;
+                outputMs = m_outputElapsedMs;
+            }
         }
 
         public void Update()

@@ -187,9 +187,13 @@ namespace StringShear
             {
                 foreach (string part in SimState.Split('\n'))
                 {
+                    if (part.Length == 0)
+                        continue;
+
                     int colon = part.IndexOf(':');
                     string name = part.Substring(0, colon);
                     string value = part.Substring(colon + 1);
+
                     dict.Add(name, value);
                 }
             }
@@ -590,9 +594,13 @@ namespace StringShear
             Dictionary<string, string> dict = new Dictionary<string, string>();
             foreach (string part in SimState.Split('\n'))
             {
+                if (part.Length == 0)
+                    continue;
+
                 int colon = part.IndexOf(':');
                 string name = part.Substring(0, colon);
                 string value = part.Substring(colon + 1);
+
                 dict.Add(name, value);
             }
 

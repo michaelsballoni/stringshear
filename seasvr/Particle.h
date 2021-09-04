@@ -27,7 +27,7 @@ struct Particle
     void ToString(char* buffer, size_t bufLen) const
     {
         snprintf(buffer, bufLen, 
-                 "%lf,%lf,%lf,%lf,%lf,%lf", 
+                 "%f,%f,%f,%f,%f,%f", 
                  x, y, vel, acl, punch, nextNeighborFactor);
     }
 

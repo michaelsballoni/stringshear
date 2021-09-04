@@ -2,9 +2,9 @@
 
 #include "Stringy.h"
 #include "Stopwatch.h"
+#include "CsLocks.h"
 
 #include <memory>
-#include <mutex>
 #include <thread>
 
 class Simulation
@@ -21,19 +21,19 @@ public:
 private:
     bool m_bPaused = true;
 
-    int m_delayMs; // negative means flat-out
-    int m_delayMod;
-    long m_simulationCycle;
+    int m_delayMs = 0; // negative means flat-out
+    int m_delayMod = 0;
+    long m_simulationCycle = 0;
 
-    double m_timeSlice;
-    double m_tension;
-    double m_damping;
+    double m_timeSlice = 0.0;
+    double m_tension = 0.0;
+    double m_damping = 0.0;
 
-    double m_time;
-    double m_maxPosTime;
-    double m_maxVelTime;
-    double m_maxAclTime;
-    double m_maxPunchTime;
+    double m_time = 0.0;
+    double m_maxPosTime = 0.0;
+    double m_maxVelTime = 0.0;
+    double m_maxAclTime = 0.0;
+    double m_maxPunchTime = 0.0;
 
     Stringy m_string;
     Stringy m_maxPosString;
@@ -44,21 +44,20 @@ private:
     std::vector<double> m_rightFrequencies;
     std::vector<double> m_leftFrequencies;
 
-    bool m_bRightEnabled;
-    bool m_bLeftEnabled;
-    bool m_bJustPulse;
-    bool m_bJustHalfPulse;
-    double m_outOfPhase;
+    bool m_bRightEnabled = false;
+    bool m_bLeftEnabled = false;
+    bool m_bJustPulse = false;
+    bool m_bJustHalfPulse = false;
+    double m_outOfPhase = 0.0;
 
     Stopwatch m_computeStopwatch;
-    double m_computeElapsedMs;
+    double m_computeElapsedMs = 0.0;
     std::shared_ptr<std::thread> m_computeThread;
 
     Stopwatch m_outputStopwatch;
-    double m_outputElapsedMs;
-    std::shared_ptr<std::thread> m_networkThread;
+    double m_outputElapsedMs = 0.0;
 
-    std::recursive_mutex m_mutex;
+    CSection m_mutex;
 
 public:
     Simulation()
@@ -70,78 +69,6 @@ public:
         m_maxPunchString = m_string.Clone();
 
         m_computeThread = std::make_shared<std::thread>(&Simulation::Run, this);
-        m_networkThread = std::make_shared<std::thread>(&Simulation::RunServer, this);
-    }
-
-private:
-    void Run()
-    {
-        while (true)
-            Update();
-    }
-
-    void RunServer()
-    {
-        printf("Setting up server...");
-        /* FORNOW
-        HttpListener listener = new HttpListener();
-        listener.Prefixes.Add($"http://localhost:9914/");
-        listener.Start();
-        Console.WriteLine("done!");
-        while (true)
-        {
-#if DEBUG
-            Console.Write("?");
-#endif
-            var ctxt = listener.GetContext();
-#if DEBUG
-            Console.Write(".");
-#endif
-            if (ctxt.Request.HttpMethod == "GET")
-            {
-                string state = ToString();
-                using (StreamWriter writer = new StreamWriter(ctxt.Response.OutputStream))
-                    writer.Write(state);
-            }
-            else
-            {
-                string settings;
-                using (StreamReader reader = new StreamReader(ctxt.Request.InputStream))
-                    settings = reader.ReadToEnd();
-                ctxt.Response.OutputStream.Close();
-                ApplySettings(settings);
-            }
-#if DEBUG
-            Console.Write("!");
-#endif
-        }
-        */
-    }
-
-    // https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
-    static std::vector<std::string> Split(const std::string& s, const char delimiter) 
-    {
-        size_t pos_start = 0, pos_end, delim_len = 1;
-        std::string token;
-        std::vector<std::string> res;
-
-        while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) 
-        {
-            token = s.substr(pos_start, pos_end - pos_start);
-            pos_start = pos_end + delim_len;
-            res.push_back(token);
-        }
-
-        res.push_back(s.substr(pos_start));
-        return res;
-    }
-
-    static std::vector<double> StrToDoubleArray(const std::string& str)
-    {
-        std::vector<double> retVal;
-        for (const auto& cur : Split(str, ','))
-            retVal.emplace_back(atof(cur.c_str()));
-        return retVal;
     }
 
     void ApplySettings(const std::string& str)
@@ -158,7 +85,7 @@ private:
             settings[name] = value;
         }
 
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
+        CSLock lock(m_mutex);
         for (const auto& it : settings)
         {
             std::string key = it.first;
@@ -201,43 +128,66 @@ private:
 
     std::string ToString()
     {
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
+        CSLock lock(m_mutex);
         m_outputStopwatch.Restart();
 
-        std::unordered_map<std::string, std::string> state;
-        state["time"] = std::to_string(m_time);
-        state["elapsedMs"] = std::to_string(m_computeElapsedMs);
+        std::string str;
+        str += "time:" + std::to_string(m_time) + ";";
+        str += "elapsedMs:" + std::to_string(m_computeElapsedMs) + ";";
 
-        state["maxPosTime"] = std::to_string(m_maxPosTime);
-        state["maxVelTime"] = std::to_string(m_maxVelTime);
-        state["maxAclTime"] = std::to_string(m_maxAclTime);
-        state["maxPunchTime"] = std::to_string(m_maxPunchTime);
+        str += "maxPosTime:" + std::to_string(m_maxPosTime) + ";";
+        str += "maxVelTime:" + std::to_string(m_maxVelTime) + ";";
+        str += "maxAclTime:" + std::to_string(m_maxAclTime) + ";";
+        str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + ";";
 
-        state["string"] = m_string.ToString();
-        state["maxPosString"] = m_maxPosString.ToString();
-        state["maxVelString"] = m_maxVelString.ToString();
-        state["maxAclString"] = m_maxAclString.ToString();
-        state["maxPunchString"] = m_maxPunchString.ToString();
-
-        std::string stateStr;
-        for (const auto& it : state)
-            stateStr += it.first + ":" + it.second + "\n";
+        str += "string:" + m_string.ToString() + ";";
+        str += "maxPosString:" + m_maxPosString.ToString() + ";";
+        str += "maxVelString:" + m_maxVelString.ToString() + ";";
+        str += "maxAclString:" + m_maxAclString.ToString() + ";";
+        str += "maxPunchString:" + m_maxPunchString.ToString() + ";";
 
         m_outputElapsedMs = m_outputStopwatch.ElapsedMs();
-        
-        return stateStr;
+        return str;
     }
 
-    double GetComputeElapsedMs()
+    void GetElapsed(double& computeMs, double& outputMs)
     {
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
-        return m_computeElapsedMs;
+        CSLock lock(m_mutex);
+        computeMs = m_computeElapsedMs;
+        outputMs = m_outputElapsedMs;
     }
 
-    double GetOutputElapsedMs()
+private:
+    void Run()
     {
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
-        return m_outputElapsedMs;
+        while (true)
+            Update();
+    }
+
+    // https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+    static std::vector<std::string> Split(const std::string& s, const char delimiter) 
+    {
+        size_t pos_start = 0, pos_end, delim_len = 1;
+        std::string token;
+        std::vector<std::string> res;
+
+        while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) 
+        {
+            token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.push_back(token);
+        }
+
+        res.push_back(s.substr(pos_start));
+        return res;
+    }
+
+    static std::vector<double> StrToDoubleArray(const std::string& str)
+    {
+        std::vector<double> retVal;
+        for (const auto& cur : Split(str, ','))
+            retVal.emplace_back(atof(cur.c_str()));
+        return retVal;
     }
 
     void Update()
@@ -247,7 +197,7 @@ private:
         // Delay.  Outside the thread safety lock.
         int delayMs = 0;
         {
-            std::lock_guard<std::recursive_mutex> lock(m_mutex);
+            CSLock lock(m_mutex);
             delayMs = m_delayMs;
             if (delayMs > 0)
             {
@@ -272,7 +222,7 @@ private:
             return;
         }
 
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
+        CSLock lock(m_mutex);
 
         m_computeStopwatch.Restart();
 
@@ -347,7 +297,7 @@ private:
 
     void Reset()
     {
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
+        CSLock lock(m_mutex);
         m_time = 0.0;
         m_string.Reset();
         ResetMaxes();
@@ -355,7 +305,7 @@ private:
 
     void ResetMaxes()
     {
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
+        CSLock lock(m_mutex);
         m_string.ResetMaxes();
 
         m_maxPosTime = 0.0;

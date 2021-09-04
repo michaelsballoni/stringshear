@@ -12,7 +12,7 @@ class Stringy
 {
 private:
     std::vector<Particle> m_particles;
-    double m_length;
+    double m_length = 0;
 
     double m_maxPos = 0;
     double m_maxVel = 0;
@@ -33,7 +33,9 @@ private:
     bool m_waveDownAndBackYet = false;
 
 public:
-    Stringy(size_t particleCount = 3, double length = 0)
+    Stringy() {}
+
+    Stringy(size_t particleCount, double length)
     {
         m_length = length;
 
@@ -46,47 +48,39 @@ public:
 
     std::string ToString()
     {
-        auto dict = Serialize();
-
         std::string str;
-        for (const auto & it : dict)
-            str += it.first + ":" + it.second + ";";
-        return str;
-    }
 
-    std::unordered_map<std::string, std::string> Serialize()
-    {
-        std::unordered_map<std::string, std::string> dict;
-
-        char buf[1024];
-        std::string particlesStr;
-        for (const auto& p : m_particles)
         {
-            p.ToString(buf, sizeof(buf));
-            particlesStr += buf;
-            particlesStr += "|";
+            str += "particles:";
+            char buf[4096];
+            for (const auto& p : m_particles)
+            {
+                p.ToString(buf, sizeof(buf));
+                str += buf;
+                str += "|";
+            }
+            str += ";";
         }
 
-        dict["particles"] = particlesStr;
-        dict["length"] = std::to_string(m_length);
+        str += "length:" + std::to_string(m_length) + ";";
 
-        dict["maxPos"] = std::to_string(m_maxPos);
-        dict["maxVel"] = std::to_string(m_maxVel);
-        dict["maxAcl"] = std::to_string(m_maxAcl);
-        dict["maxPunch"] = std::to_string(m_maxPunch);
+        str += "maxPos:" + std::to_string(m_maxPos) + ";";
+        str += "maxVel:" + std::to_string(m_maxVel) + ";";
+        str += "maxAcl:" + std::to_string(m_maxAcl) + ";";
+        str += "maxPunch:" + std::to_string(m_maxPunch) + ";";
 
-        dict["maxPosIndex"] = std::to_string(m_maxPosIndex);
-        dict["maxVelIndex"] = std::to_string(m_maxVelIndex);
-        dict["maxAclIndex"] = std::to_string(m_maxAclIndex);
-        dict["maxPunchIndex"] = std::to_string(m_maxPunchIndex);
+        str += "maxPosIndex:" + std::to_string(m_maxPosIndex) + ";";
+        str += "maxVelIndex:" + std::to_string(m_maxVelIndex) + ";";
+        str += "maxAclIndex:" + std::to_string(m_maxAclIndex) + ";";
+        str += "maxPunchIndex:" + std::to_string(m_maxPunchIndex) + ";";
 
-        dict["startWork"] = std::to_string(m_startWork);
-        dict["endWork"] = std::to_string(m_endWork);
+        str += "startWork:" + std::to_string(m_startWork) + ";";
+        str += "endWork:" + std::to_string(m_endWork) + ";";
 
-        dict["maxStartWork"] = std::to_string(m_maxStartWork);
-        dict["maxEndWork"] = std::to_string(m_maxEndWork);
+        str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
+        str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
 
-        return dict;
+        return str;
     }
 
     Stringy Clone() const
