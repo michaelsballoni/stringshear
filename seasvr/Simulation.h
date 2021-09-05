@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ScopeTiming.h"
 #include "Stringy.h"
 #include "Stopwatch.h"
 #include "CsLocks.h"
@@ -51,7 +52,6 @@ private:
     double m_outOfPhase = 0.0;
 
     Stopwatch m_computeStopwatch;
-    double m_computeElapsedMs = 0.0;
     std::shared_ptr<std::thread> m_computeThread;
 
     CSection m_mutex;
@@ -93,7 +93,7 @@ public:
             else if (key == "resetMaxes")
                 ResetMaxes();
             else if (key == "paused")
-                m_bPaused = stricmp(value.c_str(), "true") == 0;
+                m_bPaused = _stricmp(value.c_str(), "true") == 0;
             else if (key == "delayMs")
                 m_delayMs = atoi(value.c_str());
             else if (key == "delayMod")
@@ -105,13 +105,13 @@ public:
             else if (key == "damping")
                 m_damping = atof(value.c_str());
             else if (key == "rightEnabled")
-                m_bRightEnabled = stricmp(value.c_str(), "true") == 0;
+                m_bRightEnabled = _stricmp(value.c_str(), "true") == 0;
             else if (key == "leftEnabled")
-                m_bLeftEnabled = stricmp(value.c_str(), "true") == 0;
+                m_bLeftEnabled = _stricmp(value.c_str(), "true") == 0;
             else if (key == "justPulse")
-                m_bJustPulse = stricmp(value.c_str(), "true") == 0;
+                m_bJustPulse = _stricmp(value.c_str(), "true") == 0;
             else if (key == "justHalfPulse")
-                m_bJustHalfPulse = stricmp(value.c_str(), "true") == 0;
+                m_bJustHalfPulse = _stricmp(value.c_str(), "true") == 0;
             else if (key == "outOfPhase")
                 m_outOfPhase = atof(value.c_str());
             else if (key == "rightFrequencies")
@@ -137,7 +137,6 @@ public:
         str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + "\n";
 
         AppendString("string:", str, m_string);
-
         AppendString("maxPosString:", str, m_maxPosString);
         AppendString("maxVelString:", str, m_maxVelString);
         AppendString("maxAclString:", str, m_maxAclString);
@@ -149,12 +148,6 @@ public:
         str += name;
         stringy.AppendToString(str);
         str += '\n';
-    }
-
-    double GetElapsed()
-    {
-        CSLock lock(m_mutex);
-        return m_computeElapsedMs;
     }
 
 private:
@@ -194,6 +187,13 @@ private:
     {
         m_simulationCycle++;
 
+        // Bail if we're paused, but sleep to keep the processor cool.
+        if (m_bPaused)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            return;
+        }
+
         // Delay.  Outside the thread safety lock.
         int delayMs = 0;
         {
@@ -213,14 +213,6 @@ private:
         // ...unless we're running flat out!
         if (delayMs >= 0)
             std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
-
-        // Bail if we're paused, but sleep to keep the processor cool.
-        if (m_bPaused)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
-            m_computeElapsedMs = 0.0;
-            return;
-        }
 
         CSLock lock(m_mutex);
 
@@ -291,8 +283,8 @@ private:
         }
 
         m_time += m_timeSlice;
-        double elapsedMs = m_computeStopwatch.ElapsedMs();
-        m_computeElapsedMs = elapsedMs;
+
+        ScopeTiming::GetObj().RecordScope("Update", m_computeStopwatch);
     }
 
     void Reset()

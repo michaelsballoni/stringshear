@@ -41,6 +41,9 @@
     <ClInclude Include="CsLocks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScopeTiming.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="seasvr.cpp">

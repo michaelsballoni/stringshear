@@ -16,8 +16,7 @@ struct Particle
 
     Particle()
     {
-        // Let it ride
-        //memset(this, 0, sizeof(this));
+        memset(this, 0, sizeof(Particle));
     }
 
     Particle(double _x, double _y = 0, double _vel = 0, double _acl = 0, double _punch = 0, double _next = 0)
@@ -28,13 +27,6 @@ struct Particle
         acl = _acl;
         punch = _punch;
         nextNeighborFactor = _next;
-    }
-
-    void ToString(char* buffer, size_t bufLen) const
-    {
-        snprintf(buffer, bufLen, 
-                 "%f,%f,%f,%f,%f,%f", 
-                 x, y, vel, acl, punch, nextNeighborFactor);
     }
 
     double GetVal(unsigned index) const

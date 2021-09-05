@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 using System.Linq;
 
 namespace StringShear
@@ -31,6 +32,8 @@ namespace StringShear
 
         bool m_waveDownAndBackYet;
 
+        Stopwatch m_sw = new Stopwatch();
+
         public Stringy(Particle[] particles, double length)
         {
             m_length = length;
@@ -41,10 +44,9 @@ namespace StringShear
         {
             m_length = length;
 
-            m_particles = new Particle[particleCount];
-
             // Initialize the particles, spreading them out across the length
             // NOTE: Leave the starting particle alone
+            m_particles = new Particle[particleCount];
             for (int i = 1; i < particleCount; ++i)
                 m_particles[i] = new Particle(m_length * 1.0 * i / (particleCount - 1));
         }
@@ -53,7 +55,10 @@ namespace StringShear
         {
             StringBuilder sb = new StringBuilder();
 
+            m_sw.Restart();
             sb.Append("particles:" + string.Join("|", m_particles.Select(p => p.ToString())) + ";");
+            ScopeTiming.RecordScope("Stringy.ToString.Particles", m_sw);
+
             sb.Append("length:" + m_length + ";");
 
             sb.Append("maxPos:" + m_maxPos + ";");
@@ -72,7 +77,9 @@ namespace StringShear
             sb.Append("maxStartWork:" + m_maxStartWork + ";");
             sb.Append("maxEndWork:" + m_maxEndWork + ";");
 
-            return sb.ToString();
+            string str = sb.ToString();
+            ScopeTiming.RecordScope("Stringy.ToString.TheRest", m_sw);
+            return str;
         }
 
         public static Stringy FromString(string str)

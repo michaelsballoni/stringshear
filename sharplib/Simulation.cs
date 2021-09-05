@@ -46,7 +46,6 @@ namespace StringShear
         double m_outOfPhase;
 
         Stopwatch m_computeStopwatch = new Stopwatch();
-        double m_computeElapsedMs = 0.0;
 
         public Simulation()
         {
@@ -114,7 +113,6 @@ namespace StringShear
             lock (this)
             {
                 sb.Append("time:" + m_time + "\n");
-                sb.Append("elapsedMs:" + m_computeElapsedMs + "\n");
 
                 sb.Append("maxPosTime:" + m_maxPosTime + "\n");
                 sb.Append("maxVelTime:" + m_maxVelTime + "\n");
@@ -131,8 +129,6 @@ namespace StringShear
             string stateStr = sb.ToString();
             return stateStr;
         }
-
-        public double ComputeElapsedMs { get { lock (this) return m_computeElapsedMs; } }
 
         public void Update()
         {
@@ -154,18 +150,17 @@ namespace StringShear
                 }
             }
 
-            // Yield to the main application thread to cool off the CPU...
-            // ...unless we're running flat out!
-            if (delayMs >= 0)
-                Thread.Sleep(delayMs);
-
             // Bail if we're paused, but sleep to keep the processor cool.
             if (m_bPaused)
             {
                 Thread.Sleep(200);
-                m_computeElapsedMs = 0.0;
                 return;
             }
+
+            // Yield to the main application thread to cool off the CPU...
+            // ...unless we're running flat out!
+            if (delayMs >= 0)
+                Thread.Sleep(delayMs);
 
             lock (this)
             {
@@ -201,12 +196,11 @@ namespace StringShear
                     }
                 }
 
-                double timeSlice = m_timeSlice >= 0.0 ? m_timeSlice : m_computeElapsedMs / 1000.0;
                 m_string.Update
                 (
                     startPos,
                     endPos,
-                    timeSlice,
+                    m_timeSlice,
                     m_time,
                     m_tension,
                     m_damping,
@@ -238,8 +232,8 @@ namespace StringShear
                     m_maxPunchTime = m_time;
                 }
 
-                m_time += timeSlice;
-                m_computeElapsedMs = m_computeStopwatch.Elapsed.TotalMilliseconds;
+                m_time += m_timeSlice;
+                ScopeTiming.RecordScope("Update", m_computeStopwatch);
             }
         }
 

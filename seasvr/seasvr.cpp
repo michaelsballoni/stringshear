@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "ScopeTiming.h"
 #include "Simulation.h"
 
 #include <msclr\marshal.h>
@@ -19,63 +20,21 @@ std::string StringToString(String^ netStr)
     return str;
 }
 
-double g_totalOutputElapsedMs = 0.0;
-int g_outputsCount = 0;
-CSection g_outputCs;
-void SetOutputElapsedMs(double elapsedMs)
-{
-    //printf("%f\n", elapsedMs);
-    CSLock lock(g_outputCs);
-    g_totalOutputElapsedMs += elapsedMs;
-    ++g_outputsCount;
-}
-
-double GetOutputElapsedMs()
-{
-    CSLock lock(g_outputCs);
-    return g_outputsCount == 0 ? 0.0 : (g_totalOutputElapsedMs / g_outputsCount);
-}
-
-Simulation* g_sim = nullptr;
-
 void RunStats()
 {
-    double totalComputeElapsed = 0.0;
-    double totalOutputElapsed = 0.0;
-
-    int statCycles = 0;
-    
-    bool isPaused = false;
     while (true)
     {
         std::this_thread::sleep_for(std::chrono::seconds(3));
-
-        double computeElapsed = g_sim->GetElapsed();
-        if (computeElapsed == 0.0) // paused
-        {
-            if (!isPaused)
-            {
-                printf("paused\n");
-                isPaused = true;
-            }
-            continue;
-        }
-
-        totalComputeElapsed += computeElapsed;
-        isPaused = false;
-
-        ++statCycles;
-
-        printf("compute: %f - output: %f\n",
-               totalComputeElapsed / statCycles,
-               GetOutputElapsedMs());
+        printf("%s\n\n", ScopeTiming::GetObj().GetSummary().c_str());
     }
 }
 
 int main(array<System::String ^> ^args)
 {
+    ScopeTiming::GetObj().Init(true);
+
     Console::Write("Starting simulation...");
-    g_sim = new Simulation();
+    Simulation sim;
     Console::WriteLine("done!");
 
     Console::Write("Setting up server...");
@@ -88,6 +47,7 @@ int main(array<System::String ^> ^args)
 
     Stopwatch sw;
     std::string state;
+    state.reserve(1024 * 1024);
     while (true)
     {
 #ifdef _DEBUG
@@ -100,18 +60,18 @@ int main(array<System::String ^> ^args)
         if (ctxt->Request->HttpMethod == "GET")
         {
             sw.Start();
-            g_sim->ToString(state);
+            sim.ToString(state);
+            ScopeTiming::GetObj().RecordScope("main.ToString", sw);
 
             StreamWriter^ writer = gcnew StreamWriter(ctxt->Response->OutputStream);
             writer->Write(gcnew String(state.c_str()));
             delete writer;
-            
-            SetOutputElapsedMs(sw.ElapsedMs());
+            ScopeTiming::GetObj().RecordScope("main.StreamWriter", sw);
         }
         else
         {
             StreamReader^ reader = gcnew StreamReader(ctxt->Request->InputStream);
-            g_sim->ApplySettings(StringToString(reader->ReadToEnd()));
+            sim.ApplySettings(StringToString(reader->ReadToEnd()));
             delete reader;
             delete ctxt->Response->OutputStream;
         }

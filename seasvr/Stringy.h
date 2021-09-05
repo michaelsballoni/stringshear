@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Particle.h"
+#include "ScopeTiming.h"
+#include "Stopwatch.h"
 
 #include <math.h>
 
@@ -32,6 +34,8 @@ private:
 
     bool m_waveDownAndBackYet = false;
 
+    mutable Stopwatch m_sw;
+
 public:
     Stringy() {}
 
@@ -46,19 +50,26 @@ public:
             m_particles.emplace_back(m_length * 1.0 * i / (particleCount - 1));
     }
 
+    Stringy(const std::vector<Particle>& particles, double length)
+        : m_length(length)
+        , m_particles(particles)
+    {
+    }
+
     void AppendToString(std::string& str) const
     {
+        m_sw.Start();
+
+        str += "particles:";
+        char buffer[4096];
+        for (const auto& p : m_particles)
         {
-            str += "particles:";
-            char buf[4096];
-            for (const auto& p : m_particles)
-            {
-                p.ToString(buf, sizeof(buf));
-                str += buf;
-                str += "|";
-            }
-            str += ";";
+            sprintf(buffer, "%f,%f,%f,%f,%f,%f|",
+                    p.x, p.y, p.vel, p.acl, p.punch, p.nextNeighborFactor);
+            str += buffer;
         }
+        str += ";";
+        ScopeTiming::GetObj().RecordScope("String.AppendToString.Particles", m_sw);
 
         str += "length:" + std::to_string(m_length) + ";";
 
@@ -77,12 +88,13 @@ public:
 
         str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
         str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
+
+        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", m_sw);
     }
 
     Stringy Clone() const
     {
-        Stringy ret(m_particles.size(), m_length);
-        ret.m_particles = m_particles;
+        Stringy ret(m_particles, m_length);
 
         ret.m_maxPos = m_maxPos;
         ret.m_maxVel = m_maxVel;

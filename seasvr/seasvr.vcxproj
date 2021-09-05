@@ -130,6 +130,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ScopeTiming.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="Stopwatch.h" />
     <ClInclude Include="Stringy.h" />

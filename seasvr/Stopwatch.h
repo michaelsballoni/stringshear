@@ -15,7 +15,7 @@ public:
         m_start = m_timer.now();
     }
 
-    double ElapsedMs()
+    double GetElapsedMs()
     {
         return
             std::chrono::duration_cast<std::chrono::microseconds>
