@@ -31,6 +31,12 @@ namespace StringShear
 
         bool m_waveDownAndBackYet;
 
+        public Stringy(Particle[] particles, double length)
+        {
+            m_length = length;
+            m_particles = particles;
+        }
+
         public Stringy(int particleCount, double length)
         {
             m_length = length;
@@ -47,24 +53,24 @@ namespace StringShear
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("particles", string.Join("|", m_particles.Select(p => p.ToString())));
-            sb.AppendFormat("length", m_length);
+            sb.Append("particles:" + string.Join("|", m_particles.Select(p => p.ToString())) + ";");
+            sb.Append("length:" + m_length + ";");
 
-            sb.AppendFormat("maxPos", m_maxPos);
-            sb.AppendFormat("maxVel", m_maxVel);
-            sb.AppendFormat("maxAcl", m_maxAcl);
-            sb.AppendFormat("maxPunch", m_maxPunch);
+            sb.Append("maxPos:" + m_maxPos + ";");
+            sb.Append("maxVel:" + m_maxVel + ";");
+            sb.Append("maxAcl:" + m_maxAcl + ";");
+            sb.Append("maxPunch:" + m_maxPunch + ";");
 
-            sb.AppendFormat("maxPosIndex", m_maxPosIndex);
-            sb.AppendFormat("maxVelIndex", m_maxVelIndex);
-            sb.AppendFormat("maxAclIndex", m_maxAclIndex);
-            sb.AppendFormat("maxPunchIndex", m_maxPunchIndex);
+            sb.Append("maxPosIndex:" + m_maxPosIndex + ";");
+            sb.Append("maxVelIndex:" + m_maxVelIndex + ";");
+            sb.Append("maxAclIndex:" + m_maxAclIndex + ";");
+            sb.Append("maxPunchIndex:" + m_maxPunchIndex + ";");
 
-            sb.AppendFormat("startWork", m_startWork);
-            sb.AppendFormat("endWork", m_endWork);
+            sb.Append("startWork:" + m_startWork + ";");
+            sb.Append("endWork:" + m_endWork + ";");
 
-            sb.AppendFormat("maxStartWork", m_maxStartWork);
-            sb.AppendFormat("maxEndWork", m_maxEndWork);
+            sb.Append("maxStartWork:" + m_maxStartWork + ";");
+            sb.Append("maxEndWork:" + m_maxEndWork + ";");
 
             return sb.ToString();
         }
@@ -72,27 +78,24 @@ namespace StringShear
         public static Stringy FromString(string str)
         {
             var dict = new Dictionary<string, string>();
-            foreach (string line in str.Split(';'))
+            foreach (string line in str.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.Length == 0)
-                    continue;
-
                 int colon = line.IndexOf(':');
                 string name = line.Substring(0, colon);
                 string value = line.Substring(colon + 1);
-
                 dict.Add(name, value);
             }
 
             double length = double.Parse(dict["length"]);
 
-            Particle[] particles = dict["particles"].Split('|').Select(s => Particle.FromString(s)).ToArray();
+            Particle[] particles = 
+                dict["particles"]
+                .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => Particle.FromString(s))
+                .ToArray();
 
-            Stringy stringy = new Stringy(particles.Length, length);
+            Stringy stringy = new Stringy(particles, length);
             
-            stringy.m_particles = particles;
-            stringy.m_length = length;
-
             stringy.m_maxPos = double.Parse(dict["maxPos"]);
             stringy.m_maxVel = double.Parse(dict["maxVel"]);
             stringy.m_maxAcl = double.Parse(dict["maxAcl"]);

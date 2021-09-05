@@ -54,9 +54,6 @@ private:
     double m_computeElapsedMs = 0.0;
     std::shared_ptr<std::thread> m_computeThread;
 
-    Stopwatch m_outputStopwatch;
-    double m_outputElapsedMs = 0.0;
-
     CSection m_mutex;
 
 public:
@@ -128,33 +125,30 @@ public:
 
     std::string ToString()
     {
-        CSLock lock(m_mutex);
-        m_outputStopwatch.Restart();
-
         std::string str;
-        str += "time:" + std::to_string(m_time) + ";";
-        str += "elapsedMs:" + std::to_string(m_computeElapsedMs) + ";";
+        {
+            CSLock lock(m_mutex);
 
-        str += "maxPosTime:" + std::to_string(m_maxPosTime) + ";";
-        str += "maxVelTime:" + std::to_string(m_maxVelTime) + ";";
-        str += "maxAclTime:" + std::to_string(m_maxAclTime) + ";";
-        str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + ";";
+            str += "time:" + std::to_string(m_time) + "\n";
 
-        str += "string:" + m_string.ToString() + ";";
-        str += "maxPosString:" + m_maxPosString.ToString() + ";";
-        str += "maxVelString:" + m_maxVelString.ToString() + ";";
-        str += "maxAclString:" + m_maxAclString.ToString() + ";";
-        str += "maxPunchString:" + m_maxPunchString.ToString() + ";";
+            str += "maxPosTime:" + std::to_string(m_maxPosTime) + "\n";
+            str += "maxVelTime:" + std::to_string(m_maxVelTime) + "\n";
+            str += "maxAclTime:" + std::to_string(m_maxAclTime) + "\n";
+            str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + "\n";
 
-        m_outputElapsedMs = m_outputStopwatch.ElapsedMs();
+            str += "string:" + m_string.ToString() + "\n";
+            str += "maxPosString:" + m_maxPosString.ToString() + "\n";
+            str += "maxVelString:" + m_maxVelString.ToString() + "\n";
+            str += "maxAclString:" + m_maxAclString.ToString() + "\n";
+            str += "maxPunchString:" + m_maxPunchString.ToString() + "\n";
+        }
         return str;
     }
 
-    void GetElapsed(double& computeMs, double& outputMs)
+    double GetElapsed()
     {
         CSLock lock(m_mutex);
-        computeMs = m_computeElapsedMs;
-        outputMs = m_outputElapsedMs;
+        return m_computeElapsedMs;
     }
 
 private:
@@ -224,7 +218,7 @@ private:
 
         CSLock lock(m_mutex);
 
-        m_computeStopwatch.Restart();
+        m_computeStopwatch.Start();
 
         double startPos = 0.0;
         if (m_bLeftEnabled)
@@ -254,12 +248,11 @@ private:
             }
         }
 
-        double timeSlice = m_timeSlice >= 0.0 ? m_timeSlice : m_computeElapsedMs / 1000.0;
         m_string.Update
         (
             startPos,
             endPos,
-            timeSlice,
+            m_timeSlice,
             m_time,
             m_tension,
             m_damping,
@@ -291,8 +284,9 @@ private:
             m_maxPunchTime = m_time;
         }
 
-        m_time += timeSlice;
-        m_computeElapsedMs = m_computeStopwatch.ElapsedMs();
+        m_time += m_timeSlice;
+        double elapsedMs = m_computeStopwatch.ElapsedMs();
+        m_computeElapsedMs = elapsedMs;
     }
 
     void Reset()

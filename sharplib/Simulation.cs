@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-using System.Net;
-using System.IO;
 using System.Text;
 using System.Linq;
 
@@ -38,8 +36,8 @@ namespace StringShear
         Stringy m_maxAclString;
         Stringy m_maxPunchString;
 
-        double[] m_rightFrequencies;
-        double[] m_leftFrequencies;
+        double[] m_rightFrequencies = new double[0];
+        double[] m_leftFrequencies = new double[0];
 
         bool m_bRightEnabled;
         bool m_bLeftEnabled;
@@ -47,28 +45,19 @@ namespace StringShear
         bool m_bJustHalfPulse;
         double m_outOfPhase;
 
-        Stopwatch m_computeStopwatch;
-        double m_computeElapsedMs;
-
-        Stopwatch m_outputStopwatch;
-        double m_outputElapsedMs;
+        Stopwatch m_computeStopwatch = new Stopwatch();
+        double m_computeElapsedMs = 0.0;
 
         public Simulation()
         {
-            m_computeStopwatch = new Stopwatch();
-            m_outputStopwatch = new Stopwatch();
-
             m_string = new Stringy(cParticleCount, cStringLength);
+
             m_maxPosString = m_string.Clone();
             m_maxVelString = m_string.Clone();
             m_maxAclString = m_string.Clone();
             m_maxPunchString = m_string.Clone();
 
-            m_rightFrequencies = new double[0];
-            m_leftFrequencies = new double[0];
-
             new Thread(Run).Start();
-            new Thread(RunServer).Start();
         }
 
         private void Run(object obj)
@@ -77,50 +66,11 @@ namespace StringShear
                 Update();
         }
 
-        public void RunServer()
-        {
-            Console.Write("Setting up server...");
-            HttpListener listener = new HttpListener();
-            listener.Prefixes.Add($"http://localhost:9914/");
-            listener.Start();
-            Console.WriteLine("done!");
-            while (true)
-            {
-#if DEBUG
-                Console.Write("?");
-#endif
-                var ctxt = listener.GetContext();
-#if DEBUG
-                Console.Write(".");
-#endif
-                if (ctxt.Request.HttpMethod == "GET")
-                {
-                    string state = ToString();
-                    using (StreamWriter writer = new StreamWriter(ctxt.Response.OutputStream))
-                        writer.Write(state);
-                }
-                else
-                {
-                    string settings;
-                    using (StreamReader reader = new StreamReader(ctxt.Request.InputStream))
-                        settings = reader.ReadToEnd();
-                    ctxt.Response.OutputStream.Close();
-                    ApplySettings(settings);
-                }
-#if DEBUG
-                Console.Write("!");
-#endif
-            }
-        }
-
         public void ApplySettings(string str)
         {
             var settings = new Dictionary<string, string>();
-            foreach (string line in str.Split('\n'))
+            foreach (string line in str.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
                 int colon = line.IndexOf(':');
                 string name = line.Substring(0, colon);
                 string value = line.Substring(colon + 1);
@@ -163,42 +113,29 @@ namespace StringShear
             StringBuilder sb = new StringBuilder();
             lock (this)
             {
-                m_outputStopwatch.Restart();
+                sb.Append("time:" + m_time + "\n");
+                sb.Append("elapsedMs:" + m_computeElapsedMs + "\n");
 
-                sb.AppendFormat("time:{0}\n", m_time);
-                sb.AppendFormat("elapsedMs:{0}\n", m_computeElapsedMs);
+                sb.Append("maxPosTime:" + m_maxPosTime + "\n");
+                sb.Append("maxVelTime:" + m_maxVelTime + "\n");
+                sb.Append("maxAclTime:" + m_maxAclTime + "\n");
+                sb.Append("maxPunchTime:" + m_maxPunchTime + "\n");
 
-                sb.AppendFormat("maxPosTime:{0}\n", m_maxPosTime);
-                sb.AppendFormat("maxVelTime:{0}\n", m_maxVelTime);
-                sb.AppendFormat("maxAclTime:{0}\n", m_maxAclTime);
-                sb.AppendFormat("maxPunchTime:{0}\n", m_maxPunchTime);
-
-                sb.AppendFormat("string:{0}\n", m_string);
-                sb.AppendFormat("maxPosString:{0}\n", m_maxPosString);
-                sb.AppendFormat("maxVelString:{0}\n", m_maxVelString);
-                sb.AppendFormat("maxAclString:{0}\n", m_maxAclString);
-                sb.AppendFormat("maxPunchString:{0}\n", m_maxPunchString);
-
-                m_outputElapsedMs = m_outputStopwatch.Elapsed.TotalMilliseconds;
+                sb.Append("string:" + m_string + "\n");
+                sb.Append("maxPosString:" + m_maxPosString + "\n");
+                sb.Append("maxVelString:" + m_maxVelString + "\n");
+                sb.Append("maxAclString:" + m_maxAclString + "\n");
+                sb.Append("maxPunchString:" + m_maxPunchString + "\n");
             }
 
             string stateStr = sb.ToString();
             return stateStr;
         }
 
-        public void GetElapsed(ref double computeMs, ref double outputMs)
-        {
-            lock (this)
-            {
-                computeMs = m_computeElapsedMs;
-                outputMs = m_outputElapsedMs;
-            }
-        }
+        public double ComputeElapsedMs { get { lock (this) return m_computeElapsedMs; } }
 
         public void Update()
         {
-            m_simulationCycle++;
-
             // Delay.  Outside the thread safety lock.
             int delayMs = 0;
             {
@@ -233,6 +170,8 @@ namespace StringShear
             lock (this)
             {
                 m_computeStopwatch.Restart();
+
+                ++m_simulationCycle;
 
                 double startPos = 0.0;
                 if (m_bLeftEnabled)

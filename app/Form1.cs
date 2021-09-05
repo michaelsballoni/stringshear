@@ -193,13 +193,11 @@ namespace StringShear
                     int colon = part.IndexOf(':');
                     string name = part.Substring(0, colon);
                     string value = part.Substring(colon + 1);
-
                     dict.Add(name, value);
                 }
             }
 
             double time = double.Parse(dict["time"]);
-            double elapsedMs = double.Parse(dict["elapsedMs"]);
 
             Stringy curStringy = Stringy.FromString(dict["string"]);
 
@@ -262,17 +260,6 @@ namespace StringShear
                         maxPunchStringy.GetMaxPunch(),
                         maxPunchTime,
                         4);
-
-            double curTime = Math.Max(time, 0.000001);
-            summaryLabel.Text =
-                string.Format("start work = {0}/s, max = {1}\n"
-                               + "end work = {2}/s, max = {3}\n"
-                               + "elapsed = {4} ms",
-                               Math.Round(curStringy.GetStartWork() / curTime, 4),
-                               Math.Round(curStringy.GetMaxStartWork(), 4),
-                               Math.Round(curStringy.GetEndWork() / curTime, 4),
-                               Math.Round(curStringy.GetMaxEndWork(), 4),
-                               Math.Round(elapsedMs, 4));
 
             m_bufferedGraphics.Render(Graphics.FromHwnd(displayGroup.Handle));
         }
@@ -600,7 +587,6 @@ namespace StringShear
                 int colon = part.IndexOf(':');
                 string name = part.Substring(0, colon);
                 string value = part.Substring(colon + 1);
-
                 dict.Add(name, value);
             }
 

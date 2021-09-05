@@ -7,10 +7,10 @@ class Stopwatch
 public:
     Stopwatch()
     {
-        Restart();
+        Start();
     }
 
-    void Restart()
+    void Start()
     {
         m_start = m_timer.now();
     }

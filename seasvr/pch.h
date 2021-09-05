@@ -1,9 +1,12 @@
 #pragma once
 
+#include <windows.h>
+
+#include <vcclr.h>
+#include <msclr\marshal.h>
+
 #include <stdio.h>
 #include <math.h>
-#include <vcclr.h>
-#include <windows.h>
 
 #include <chrono>
 #include <exception>

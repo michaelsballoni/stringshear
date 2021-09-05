@@ -32,7 +32,11 @@ namespace StringShear
 
         public static Particle FromString(string str)
         {
-            double[] vals = str.Split(',').Select(x => double.Parse(x)).ToArray();
+            double[] vals = 
+                str
+                .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => double.Parse(x))
+                .ToArray();
             if (vals.Length != 6)
                 throw new Exception("Particle parsing fails: " + str);
 

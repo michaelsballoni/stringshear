@@ -43,7 +43,6 @@
             this.justHalfPulseCheck = new System.Windows.Forms.CheckBox();
             this.justPulseCheck = new System.Windows.Forms.CheckBox();
             this.tensionEdit = new System.Windows.Forms.TextBox();
-            this.summaryLabel = new System.Windows.Forms.Label();
             this.speedLabel = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -101,7 +100,7 @@
             // mailLink
             // 
             this.mailLink.AutoSize = true;
-            this.mailLink.Location = new System.Drawing.Point(135, 759);
+            this.mailLink.Location = new System.Drawing.Point(222, 684);
             this.mailLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mailLink.Name = "mailLink";
             this.mailLink.Size = new System.Drawing.Size(122, 20);
@@ -123,7 +122,7 @@
             // 
             // copyEdit
             // 
-            this.copyEdit.Location = new System.Drawing.Point(233, 722);
+            this.copyEdit.Location = new System.Drawing.Point(15, 684);
             this.copyEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.copyEdit.Name = "copyEdit";
             this.copyEdit.Size = new System.Drawing.Size(111, 26);
@@ -204,16 +203,6 @@
             this.tensionEdit.TabIndex = 1;
             this.tensionEdit.Text = "399565";
             this.tensionEdit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // summaryLabel
-            // 
-            this.summaryLabel.AutoSize = true;
-            this.summaryLabel.Location = new System.Drawing.Point(10, 694);
-            this.summaryLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.summaryLabel.Name = "summaryLabel";
-            this.summaryLabel.Size = new System.Drawing.Size(82, 60);
-            this.summaryLabel.TabIndex = 24;
-            this.summaryLabel.Text = "summary1\r\nsummary2\r\nsummary3";
             // 
             // speedLabel
             // 
@@ -383,7 +372,6 @@
             this.settingsGroup.Controls.Add(this.resetMaxButton);
             this.settingsGroup.Controls.Add(this.timeSliceEdit);
             this.settingsGroup.Controls.Add(this.tensionEdit);
-            this.settingsGroup.Controls.Add(this.summaryLabel);
             this.settingsGroup.Controls.Add(this.speedLabel);
             this.settingsGroup.Controls.Add(this.label7);
             this.settingsGroup.Controls.Add(this.label3);
@@ -394,7 +382,7 @@
             this.settingsGroup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.settingsGroup.Name = "settingsGroup";
             this.settingsGroup.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.settingsGroup.Size = new System.Drawing.Size(352, 789);
+            this.settingsGroup.Size = new System.Drawing.Size(352, 725);
             this.settingsGroup.TabIndex = 2;
             this.settingsGroup.TabStop = false;
             this.settingsGroup.Text = "Settings";
@@ -403,7 +391,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1131, 805);
+            this.ClientSize = new System.Drawing.Size(1131, 731);
             this.Controls.Add(this.displayGroup);
             this.Controls.Add(this.settingsGroup);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -437,7 +425,6 @@
         private System.Windows.Forms.CheckBox justHalfPulseCheck;
         private System.Windows.Forms.CheckBox justPulseCheck;
         private System.Windows.Forms.TextBox tensionEdit;
-        private System.Windows.Forms.Label summaryLabel;
         private System.Windows.Forms.Label speedLabel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;

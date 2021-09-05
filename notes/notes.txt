@@ -1,0 +1,15 @@
+//
+// Todo
+//
+Analyze the Update function
+Fix C++ network buffering...don't gcnew a String from a std::string.c_str()...just write the damned thing to a buffer and go!
+Explore Update performance
+
+//
+// Performance
+//
+// C++
+09/04/21: compute: 0.05 - output: 40
+
+// C#
+09/04/21: compute: 0.04 - output: 17
