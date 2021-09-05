@@ -24,6 +24,7 @@ int g_outputsCount = 0;
 CSection g_outputCs;
 void SetOutputElapsedMs(double elapsedMs)
 {
+    //printf("%f\n", elapsedMs);
     CSLock lock(g_outputCs);
     g_totalOutputElapsedMs += elapsedMs;
     ++g_outputsCount;
@@ -32,7 +33,7 @@ void SetOutputElapsedMs(double elapsedMs)
 double GetOutputElapsedMs()
 {
     CSLock lock(g_outputCs);
-    return g_outputsCount == 0 ? 0.0 : g_totalOutputElapsedMs / g_outputsCount;
+    return g_outputsCount == 0 ? 0.0 : (g_totalOutputElapsedMs / g_outputsCount);
 }
 
 Simulation* g_sim = nullptr;
@@ -85,7 +86,8 @@ int main(array<System::String ^> ^args)
 
     std::thread statsThread(RunStats);
 
-    auto sw = gcnew System::Diagnostics::Stopwatch();
+    Stopwatch sw;
+    std::string state;
     while (true)
     {
 #ifdef _DEBUG
@@ -97,12 +99,14 @@ int main(array<System::String ^> ^args)
 #endif
         if (ctxt->Request->HttpMethod == "GET")
         {
-            sw->Restart();
-            std::string state = g_sim->ToString();
+            sw.Start();
+            g_sim->ToString(state);
+
             StreamWriter^ writer = gcnew StreamWriter(ctxt->Response->OutputStream);
-            writer->Write(marshal_as<String^>(state.c_str()));
+            writer->Write(gcnew String(state.c_str()));
             delete writer;
-            SetOutputElapsedMs(sw->Elapsed.TotalMilliseconds);
+            
+            SetOutputElapsedMs(sw.ElapsedMs());
         }
         else
         {

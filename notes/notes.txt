@@ -9,7 +9,11 @@ Explore Update performance
 // Performance
 //
 // C++
-09/04/21: compute: 0.05 - output: 40
+09/04/21: 
+	compute: 0.05 - output: 40
+	compute: 0.05 - output: 70 - with stringstream instead of std::string +=
 
 // C#
-09/04/21: compute: 0.04 - output: 17
+09/04/21: 
+	compute: 0.038 - output: 11 - just build response
+	compute: 0.04  - output: 20 - complete

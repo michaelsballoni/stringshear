@@ -123,26 +123,32 @@ public:
         }
     }
 
-    std::string ToString()
+    void ToString(std::string& str)
     {
-        std::string str;
-        {
-            CSLock lock(m_mutex);
+        CSLock lock(m_mutex);
 
-            str += "time:" + std::to_string(m_time) + "\n";
+        str.clear();
 
-            str += "maxPosTime:" + std::to_string(m_maxPosTime) + "\n";
-            str += "maxVelTime:" + std::to_string(m_maxVelTime) + "\n";
-            str += "maxAclTime:" + std::to_string(m_maxAclTime) + "\n";
-            str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + "\n";
+        str += "time:" + std::to_string(m_time) + "\n";
 
-            str += "string:" + m_string.ToString() + "\n";
-            str += "maxPosString:" + m_maxPosString.ToString() + "\n";
-            str += "maxVelString:" + m_maxVelString.ToString() + "\n";
-            str += "maxAclString:" + m_maxAclString.ToString() + "\n";
-            str += "maxPunchString:" + m_maxPunchString.ToString() + "\n";
-        }
-        return str;
+        str += "maxPosTime:" + std::to_string(m_maxPosTime) + "\n";
+        str += "maxVelTime:" + std::to_string(m_maxVelTime) + "\n";
+        str += "maxAclTime:" + std::to_string(m_maxAclTime) + "\n";
+        str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + "\n";
+
+        AppendString("string:", str, m_string);
+
+        AppendString("maxPosString:", str, m_maxPosString);
+        AppendString("maxVelString:", str, m_maxVelString);
+        AppendString("maxAclString:", str, m_maxAclString);
+        AppendString("maxPunchString:", str, m_maxPunchString);
+    }
+
+    static void AppendString(const char* name, std::string& str, const Stringy& stringy)
+    {
+        str += name;
+        stringy.AppendToString(str);
+        str += '\n';
     }
 
     double GetElapsed()

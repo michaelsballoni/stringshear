@@ -46,10 +46,8 @@ public:
             m_particles.emplace_back(m_length * 1.0 * i / (particleCount - 1));
     }
 
-    std::string ToString()
+    void AppendToString(std::string& str) const
     {
-        std::string str;
-
         {
             str += "particles:";
             char buf[4096];
@@ -79,8 +77,6 @@ public:
 
         str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
         str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
-
-        return str;
     }
 
     Stringy Clone() const

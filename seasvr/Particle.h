@@ -14,7 +14,13 @@ struct Particle
     double punch;
     double nextNeighborFactor;
 
-    Particle(double _x = 0, double _y = 0, double _vel = 0, double _acl = 0, double _punch = 0, double _next = 0)
+    Particle()
+    {
+        // Let it ride
+        //memset(this, 0, sizeof(this));
+    }
+
+    Particle(double _x, double _y = 0, double _vel = 0, double _acl = 0, double _punch = 0, double _next = 0)
     {
         x = _x;
         y = _y;
