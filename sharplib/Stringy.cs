@@ -14,11 +14,13 @@ namespace StringShear
         Particle[] m_particles;
         double m_length;
 
+        // What were our most extreme values of Particles on this string?
         double m_maxPos;
         double m_maxVel;
         double m_maxAcl;
         double m_maxPunch;
 
+        // Which particle had the most extreme value?
         int m_maxPosIndex;
         int m_maxVelIndex;
         int m_maxAclIndex;
@@ -37,7 +39,7 @@ namespace StringShear
         public Stringy(Particle[] particles, double length)
         {
             m_length = length;
-            m_particles = particles;
+            m_particles = (Particle[])particles.Clone();
         }
 
         public Stringy(int particleCount, double length)
@@ -45,19 +47,22 @@ namespace StringShear
             m_length = length;
 
             // Initialize the particles, spreading them out across the length
-            // NOTE: Leave the starting particle alone
             m_particles = new Particle[particleCount];
+            m_particles[0] = new Particle();
             for (int i = 1; i < particleCount; ++i)
                 m_particles[i] = new Particle(m_length * 1.0 * i / (particleCount - 1));
         }
 
         public override string ToString()
         {
+            m_sw.Restart(); // we (re)use a Stopwatch for seeing what takes time
             StringBuilder sb = new StringBuilder();
 
-            m_sw.Restart();
+            // Somehow this piece of Linq outperforms the C++ counterpart around 40% 1.7ms vs. 2.4ms
             sb.Append("particles:" + string.Join("|", m_particles.Select(p => p.ToString())) + ";");
             ScopeTiming.RecordScope("Stringy.ToString.Particles", m_sw);
+            // ScopeTiming.RecordScope records how long the Stopwatch.Elapsed
+            // associated with the name "String.To..." and does a Stopwatch.Restart()
 
             sb.Append("length:" + m_length + ";");
 
@@ -76,12 +81,14 @@ namespace StringShear
 
             sb.Append("maxStartWork:" + m_maxStartWork + ";");
             sb.Append("maxEndWork:" + m_maxEndWork + ";");
+            ScopeTiming.RecordScope("Stringy.ToString.TheRest", m_sw); // no time
 
             string str = sb.ToString();
-            ScopeTiming.RecordScope("Stringy.ToString.TheRest", m_sw);
+            ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", m_sw);
             return str;
         }
 
+        // App side code calls this to compute what the UI should show from the simulation's state
         public static Stringy FromString(string str)
         {
             var dict = new Dictionary<string, string>();
@@ -122,12 +129,9 @@ namespace StringShear
             return stringy;
         }
 
-        public Stringy Clone()
+        public Stringy Clone() // copy constructor
         {
-            Stringy ret = new Stringy(m_particles.Length, m_length);
-
-            for (int i = 0; i < m_particles.Length; ++i)
-                ret.m_particles[i] = m_particles[i];
+            Stringy ret = new Stringy(m_particles, m_length);
 
             ret.m_maxPos = m_maxPos;
             ret.m_maxVel = m_maxVel;
@@ -199,6 +203,10 @@ namespace StringShear
 
             if (newEndWork > m_maxEndWork)
                 m_maxEndWork = newEndWork;
+
+            //
+            // Here's the magic from the textbook...
+            //
 
             // Compute neighbor factors.
             for (int i = 0; i < m_particles.Length - 1; ++i)

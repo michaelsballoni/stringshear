@@ -125,9 +125,7 @@ namespace StringShear
                 sb.Append("maxAclString:" + m_maxAclString + "\n");
                 sb.Append("maxPunchString:" + m_maxPunchString + "\n");
             }
-
-            string stateStr = sb.ToString();
-            return stateStr;
+            return sb.ToString();
         }
 
         public void Update()

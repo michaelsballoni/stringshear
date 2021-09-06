@@ -60,10 +60,10 @@ public:
     Simulation()
         : m_string(cParticleCount, cStringLength)
     {
-        m_maxPosString = m_string.Clone();
-        m_maxVelString = m_string.Clone();
-        m_maxAclString = m_string.Clone();
-        m_maxPunchString = m_string.Clone();
+        m_maxPosString = m_string;
+        m_maxVelString = m_string;
+        m_maxAclString = m_string;
+        m_maxPunchString = m_string;
 
         m_computeThread = std::make_shared<std::thread>(&Simulation::Run, this);
     }
@@ -260,25 +260,25 @@ private:
 
         if (fabs(m_string.GetMaxPos()) > fabs(m_maxPosString.GetMaxPos()))
         {
-            m_maxPosString = m_string.Clone();
+            m_maxPosString = m_string;
             m_maxPosTime = m_time;
         }
 
         if (fabs(m_string.GetMaxVel()) > fabs(m_maxVelString.GetMaxVel()))
         {
-            m_maxVelString = m_string.Clone();
+            m_maxVelString = m_string;
             m_maxVelTime = m_time;
         }
 
         if (fabs(m_string.GetMaxAcl()) > fabs(m_maxAclString.GetMaxAcl()))
         {
-            m_maxAclString = m_string.Clone();
+            m_maxAclString = m_string;
             m_maxAclTime = m_time;
         }
 
         if (fabs(m_string.GetMaxPunch()) > fabs(m_maxPunchString.GetMaxPunch()))
         {
-            m_maxPunchString = m_string.Clone();
+            m_maxPunchString = m_string;
             m_maxPunchTime = m_time;
         }
 

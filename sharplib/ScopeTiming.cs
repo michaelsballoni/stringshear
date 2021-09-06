@@ -86,7 +86,7 @@ namespace StringShear
                     }
                 }
                 sb.Sort();
-                return string.Join("\r\n", sb);
+                return string.Join("\n", sb);
             }
         }
 

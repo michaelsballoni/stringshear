@@ -15,6 +15,8 @@ namespace StringShear
         public double punch;
         public double nextNeighborFactor;
 
+        // NOTE: Default constructor zeroes out all fields which is what we want
+
         public Particle(double _x, double _y = 0, double _vel = 0, double _acl = 0, double _punch = 0, double _next = 0)
         {
             x = _x;

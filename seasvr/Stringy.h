@@ -4,6 +4,7 @@
 #include "ScopeTiming.h"
 #include "Stopwatch.h"
 
+#include <stdio.h>
 #include <math.h>
 
 #include <string>
@@ -56,6 +57,37 @@ public:
     {
     }
 
+    Stringy(const Stringy& other)
+    {
+        operator=(other);
+    }
+
+    Stringy& operator=(const Stringy& other)
+    {
+        if (&other == this)
+            return *this;
+
+        m_particles = other.m_particles;
+        m_length = other.m_length;
+
+        m_maxPos = other.m_maxPos;
+        m_maxVel = other.m_maxVel;
+        m_maxAcl = other.m_maxAcl;
+        m_maxPunch = other.m_maxPunch;
+
+        m_maxPosIndex = other.m_maxPosIndex;
+        m_maxVelIndex = other.m_maxVelIndex;
+        m_maxAclIndex = other.m_maxAclIndex;
+        m_maxPunchIndex = other.m_maxPunchIndex;
+
+        m_startWork = other.m_startWork;
+        m_endWork = other.m_endWork;
+        m_maxStartWork = other.m_maxStartWork;
+        m_maxEndWork = other.m_maxEndWork;
+
+        return *this;
+    }
+
     void AppendToString(std::string& str) const
     {
         m_sw.Start();
@@ -64,12 +96,14 @@ public:
         char buffer[4096];
         for (const auto& p : m_particles)
         {
-            sprintf(buffer, "%f,%f,%f,%f,%f,%f|",
-                    p.x, p.y, p.vel, p.acl, p.punch, p.nextNeighborFactor);
+            sprintf_s(buffer, sizeof(buffer), 
+                      "%f,%f,%f,%f,%f,%f|",
+                      p.x, p.y, p.vel, p.acl, p.punch, p.nextNeighborFactor);
             str += buffer;
         }
         str += ";";
         ScopeTiming::GetObj().RecordScope("String.AppendToString.Particles", m_sw);
+        // This step here is about 40% slower than the Linq-based C# version...weird!
 
         str += "length:" + std::to_string(m_length) + ";";
 
@@ -89,29 +123,7 @@ public:
         str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
         str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
 
-        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", m_sw);
-    }
-
-    Stringy Clone() const
-    {
-        Stringy ret(m_particles, m_length);
-
-        ret.m_maxPos = m_maxPos;
-        ret.m_maxVel = m_maxVel;
-        ret.m_maxAcl = m_maxAcl;
-        ret.m_maxPunch = m_maxPunch;
-
-        ret.m_maxPosIndex = m_maxPosIndex;
-        ret.m_maxVelIndex = m_maxVelIndex;
-        ret.m_maxAclIndex = m_maxAclIndex;
-        ret.m_maxPunchIndex = m_maxPunchIndex;
-
-        ret.m_startWork = m_startWork;
-        ret.m_endWork = m_endWork;
-        ret.m_maxStartWork = m_maxStartWork;
-        ret.m_maxEndWork = m_maxEndWork;
-
-        return ret;
+        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", m_sw); // not much
     }
 
     // Get the maximums
