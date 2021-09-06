@@ -84,7 +84,7 @@ namespace StringShear
             ScopeTiming.RecordScope("Stringy.ToString.TheRest", m_sw); // no time
 
             string str = sb.ToString();
-            ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", m_sw);
+            ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", m_sw); // no time
             return str;
         }
 
@@ -205,7 +205,7 @@ namespace StringShear
                 m_maxEndWork = newEndWork;
 
             //
-            // Here's the magic from the textbook...
+            // Here's the magic from the textbook diagram...
             //
 
             // Compute neighbor factors.

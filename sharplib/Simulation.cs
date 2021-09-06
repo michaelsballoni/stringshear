@@ -12,7 +12,7 @@ namespace StringShear
         public const int cParticleCount = 1000;
         public const double cStringConstant = 0.03164; // magic number
         public const double cStringLength = 1.0; // meter
-        public const double cOscillatorAmplitude = 0.001; // mm
+        public const double cOscillatorAmplitude = 0.001; // not much, just a mm per frequency
 
         bool m_bPaused = true;
 
@@ -136,7 +136,6 @@ namespace StringShear
                 lock (this)
                 {
                     delayMs = m_delayMs;
-
                     if (delayMs > 0)
                     {
                         if (m_delayMod > 0)
@@ -263,7 +262,7 @@ namespace StringShear
             }
         }
 
-        // Get the position of this at a particular time
+        // Get the position of this oscillator at a particular time
         public static double // static to ensure purity of processing
             GetOscillatorPosition
             (

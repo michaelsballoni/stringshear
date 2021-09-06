@@ -44,7 +44,7 @@ Description: A science program is rearranged and ported from C# to C++, with sur
 Abstract:    You would think that C++ would run laps around C# for a science project,
              that taking the time to do things right in C++ would pay off big time.
              I explore the porting process and the performance measurement,
-             and the startling conclusion.
+             and reach a startling conclusion.
 
 Author:      Michael Sydney Balloni
 Email:       balloni.michael@yahoo.com
@@ -64,7 +64,7 @@ License:     Apache 2.0
     <!--  Include download and sample image information.                       -->
 
     <ul class=download>
-        <li><a href="Article_src.zip">Download source - XXX Kb</a></li>
+        <li><a href="code.zip">Download source - XXX Kb</a></li>
     </ul>
 
     <!-------------------------------     STEP 3      --------------------------->
@@ -76,17 +76,17 @@ License:     Apache 2.0
         A little background.
     </p>
     <p>
-        I was a stellar math and physics student in high school.
+        A million years ago, I was a stellar math and physics student.
         Let's say I peaked early...
     </p>
     <p>
-        College math and physics was much harder than expected.
+        College math and physics were much harder than expected.
         I ended up meeting my wife and learning C++.
         Mission accomplished!
     </p>
     <p>
-        FYI:
-        When I entered college they taught new students C++.
+        Aside:
+        When I entered college they taught new students like myself C++.
         When I left they were teaching noobs Java.
         Now they teach them Python.
         Alas.
@@ -105,30 +105,34 @@ License:     Apache 2.0
         The coolest experiment was "Simple Harmonic Motion On A String."
         In this experiment, there's a string suspended above a table.
         At one end the string is held fixed with a weight applied, creating tension.
-        At the other end of the table the string is passed over an oscillator,
-        an uppy-downy thing that moves that end of the string up and down.
+        At the other end of the table the string is passed over an oscillator
+        that moves that end of the string up and down.
         The oscillator's motion can be dialed in to a specific frequency,
         and, then, magic: Patterns called standing waves appear on the vibrating string.
-        With what are called resonant frequencies, the standing waves become pronounced, large patterns emerge.
+        With what are called resonant frequencies, the standing waves become pronounced,
+        and large patterns emerge in the vibrating string.
         This fascinated the hell out of me.
         <br>
         <br>
-        <b><a target=_blank href="https://www.google.com/search?q=standing+waves+on+a+string&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjgi_uG1-jyAhX3HjQIHd8xCdoQ_AUoA3oECAEQBQ&cshid=1630874100764215&biw=1280&bih=577">Many great diagrams here</a></b>
+        <b>
+            <a target=_blank href="https://www.google.com/search?q=standing+waves+on+a+string&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjgi_uG1-jyAhX3HjQIHd8xCdoQ_AUoA3oECAEQBQ&cshid=1630874100764215&biw=1280&bih=577"
+               >Many great diagrams here</a>
+        </b>
     </p>
     <p>
         As a software guy, I was inspired to take a diagram from the textbook
         and try to make a simulation of the standing waves string experiment.
         At the time, Microsoft was not giving away the crown jewels for free the way they
-        have done with Visual Studio 2017 and 2019 Community Editions.
+        have done with the Visual Studio 2017 and 2019 Community Editions.
         I wanted to do C++ programming, and the only way to do that back in the days of Visual Studio Express
         was .NET's C++/CLI, called Managed C++ at the time.  I hope you like carrots!
         It had a form designer, and the .NET library was quite workable.
         So I set to work.
     </p>
     <p>
-        Months of development and tuning later, I had a working simulation.
-        Tuning it took forever.
-        There are a couple of hard-fought magic numbers I had to hone in on
+        Weeks of development and tuning later, I had a working simulation.
+        Tuning it took forever, for example my wife's revelation that the tension had to be quite high.
+        There are a couple of these hard-fought magic numbers I had to hone in on
         to get it to where you can put in a frequency like 20 Hz and see a standing wave.
     </p>
 
@@ -139,6 +143,9 @@ License:     Apache 2.0
         At the left, top to bottom, are a real-time view of the string,
         and snapshots of the string when it was at its most extreme
         amplitude (height), velocity (up and down), acceleration, and punch (not fruit, change in acceleration).
+        For each string, in the bottom-left you see the strings height at that moment (in millimeters),
+        in the top right you see extreme value that was measured ("max = "),
+        and in the bottom right you see the elapsed time ("time = ") in the simulation when the maximum was recorded.
     </p>
     <p>
         At the right are the simulation controls.
@@ -147,14 +154,14 @@ License:     Apache 2.0
                 <b>Time Slice</b> is how quickly the simulation runs, in parts of a millisecond.
                 Too high and the simulation is not realistic.
                 Too low and the simulation runs too slowly.
-                Best to not go higher that 0.01.
+                Best to not go higher that 0.01 ms.
                 You might go lower to validate that something you observed
-                is not some artifact of simulation overload.
+                is not some artifact of simulation overload from running too fast.
             </li>
             <li>
                 <b>Simulation Speed</b> controls the delay in the simulation's update loop.
                 For any real study you would run it at All Out for hours on end.
-                You can use lower speeds to observe the string motion in even slower motion.
+                You can use lower speeds to observe the string motion even slower.
             </li>
             <li>
                 <b>Tension / Root Note</b> is tricky.
@@ -166,7 +173,7 @@ License:     Apache 2.0
             <li>
                 <b>Oscillators</b> define the vibrations made at the ends of the strings.
                 Not limited to a single physical oscillator with a single frequency,
-                you can enter whatever you'd like for either side or both.
+                you can enter whatever you'd like for either side or both, each frequency on its own line.
                 Don't get carried away, though.
                 With too many frequencies, especially high ones, you start to see un-string-like behavior.
                 It's a difficult point, that to find anything interesting you have to go to lengths that might
@@ -177,13 +184,13 @@ License:     Apache 2.0
             <li>
                 <b>Out of Phase</b> sets the offset in the left versus the right oscillators.
                 If you put the same frequency on the left and right, and set this to zero,
-                the string will just move up and down; no standing waves will form.
+                the string will just move up and down and no standing waves will form.
                 In the real world, I was able to prove this out with a string between two oscillators.
                 Only when I reverse wired them did a standing wave form.
             </li>
             <li>
-                <b>Just Pulse</b> and <b>Just Half Pulse</b> let you see how a standing wave forms in the very beginning
-                with just one wave front moving down the string and echoing back.
+                <b>Just Pulse</b> and <b>Just Half Pulse</b> let you see how a standing wave forms
+                in the very beginning with just one wave front moving down the string and echoing back.
             </li>
             <li>
                 <b>Run / Pause</b> controls the simulation, starting or pausing or restarting it.
@@ -218,7 +225,7 @@ License:     Apache 2.0
         where the string resonates with the vibrations it's getting from its ends.
     </p>
     <p>
-        Build it and plug in the frequencies you've got here, and watch how, in really slow motion,
+        Build it and plug in the frequencies you've got here, and watch how, in slow motion,
         the string moves, and maximum strings are recorded.
         It's mesmerizing.
     </p>
@@ -234,11 +241,11 @@ License:     Apache 2.0
     </p>
     <p>
         <ul>
-            <li><b>original</b> - C# port of the truly original C++/CLI WinForms program (2007!)</li>
-            <li><b>app</b> - C# WinForms UI client that runs the show</li>
+            <li><b>original</b> - C# port of the truly original C++/CLI WinForms program (from 2007!)</li>
+            <li><b>app</b> - C# WinForms UI client that runs the new client-server show</li>
             <li><b>sharpsvr</b> - C# HttpListener server that implements the simulation</li>
-            <li><b>sharplib</b> - C# class library that implements the guts of sharpsvr, and has code shared with the app for serialization</li>
-            <li><b>sharpsvr</b> - C++ server that reimplements the simulation, with a little /CLI just for HttpListener that's identical with sharpsvr</li>
+            <li><b>sharplib</b> - C# class library that implements the guts of sharpsvr, and implements inter-process communication</li>
+            <li><b>seasvr</b> - C++ server that reimplements the simulation, with a little .../CLI just for the HttpListener serever code</li>
         </ul>
     </p>
     <p>
@@ -248,8 +255,8 @@ License:     Apache 2.0
     <p>
         <ul>
             <li><b>Simulation</b> - Runs the experiment, and does serialization and event handling with the app</li>
-            <li><b>Stringy</b> - Well, I couldn't call it String!  Manages its serialization and updating</li>
-            <li><b>Particle</b> - Our string effectively consists of 1,000 beads, but particles sound cooler than beads</li>
+            <li><b>Stringy</b> - Well, I couldn't call it String!  Manages serialization and updating</li>
+            <li><b>Particle</b> - Our string effectively consists of 1,000 strung beads...particles sound cooler than beads</li>
             <li><b>ScopeTiming</b> - Performance tracking</li>
         </ul>
     </p>
@@ -261,8 +268,29 @@ License:     Apache 2.0
         - as I am prone to do! -
         I needed to run the simulators out of process, in a C# server and a C++ server.
         Okay, I didn't <b>need</b> to do it that way,
-        but it's nice to be able to leave the simulation running
-        without having the app working the graphics card for hours on end.
+        but it's nice to be able to leave the simulation running for hours on end
+        without having the app burning up the graphics card the whole time.
+    </p>
+    <p>
+        The general algorithm is...
+        <ol>
+            <li>
+                The simulation is always running calling the Update function
+                which simulates oscillators and updates strings and particles
+            </li>
+            <li>
+                The simulation receives settings from the app to apply to itself
+            </li>
+            <li>
+                This simulation serves its state (strings, maxes, etc.) as a web server for the app to query
+            </li>
+            <li>
+                The app has controls for sending settings to the simulation to control it
+            </li>
+            <li>
+                This app has a timer that queries the simulation for its state and updates the display
+            </li>
+        </ol>
     </p>
     <p>
         So my plan of attack was to follow these steps,
@@ -280,7 +308,7 @@ License:     Apache 2.0
     <pre>
 using...
 namespace...
-/// <summary>
+/// &lt;summary&gt;
 /// Utility class for timing sections of code
 /// To do timing:
 /// Call Init first to enable timing
@@ -288,22 +316,22 @@ namespace...
 /// Call RecordScope at the end of the code to time
 /// Call Summary to get a summary of the timings performed
 /// Call Clear to remove all timings
-/// </summary>
+/// &lt;/summary&gt;
 public static class ScopeTiming
 {
-    /// <summary>
+    /// &lt;summary&gt;
     /// Initialize to enable timing
-    /// </summary>
-    /// <param name="enable">Specify to enable timing</param>
+    /// &lt;/summary&gt;
+    /// &lt;param name="enable"&gt;Specify to enable timing&lt;/param&gt;
     public static void Init(bool enable)
     {
         sm_enabled = enable;
     }
 
-    /// <summary>
+    /// &lt;summary&gt;
     /// Get a Stopwatch to start timing
-    /// </summary>
-    /// <returns>null if not enabled, or else a new Stopwatch</returns>
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;null if not enabled, or else a new Stopwatch&lt;/returns&gt;
     public static Stopwatch StartTiming()
     {
         if (!sm_enabled)
@@ -312,11 +340,11 @@ public static class ScopeTiming
         return Stopwatch.StartNew();
     }
 
-    /// <summary>
+    /// &lt;summary&gt;
     /// Record the time since StartTiming was called
-    /// </summary>
-    /// <param name="scope">What area of the code would you call this?</param>
-    /// <param name="sw">null if not timing, or Stopwatch started timing</param>
+    /// &lt;/summary&gt;
+    /// &lt;param name="scope"&gt;What area of the code would you call this?&lt;/param&gt;
+    /// &lt;param name="sw"&gt;null if not timing, or Stopwatch started timing&lt;/param&gt;
     public static void RecordScope(string scope, Stopwatch sw)
     {
         if (sw == null)
@@ -338,14 +366,14 @@ public static class ScopeTiming
         sw.Restart();
     }
 
-    /// <summary>
+    /// &lt;summary&gt;
     /// Get a summary of the recorded timings
-    /// </summary>
+    /// &lt;/summary&gt;
     public static string Summary
     {
         get
         {
-            var sb = new List<string>();
+            var sb = new List&lt;string&gt;();
             lock (sm_timings)
             {
                 foreach (Scope obj in sm_timings.Values)
@@ -355,8 +383,8 @@ public static class ScopeTiming
 
                     sb.Add
                     (
-                        $"{obj.ScopeName} -> {obj.Hits} hits - " +
-                        $"{Math.Round(obj.Allotted.TotalMilliseconds)} ms total -> " +
+                        $"{obj.ScopeName} -&gt; {obj.Hits} hits - " +
+                        $"{Math.Round(obj.Allotted.TotalMilliseconds)} ms total -&gt; " +
                         $"{Math.Round(obj.Allotted.TotalMilliseconds / obj.Hits, 5)} ms avg"
                     );
                 }
@@ -366,9 +394,9 @@ public static class ScopeTiming
         }
     }
 
-    /// <summary>
+    /// &lt;summary&gt;
     /// Remove all timings
-    /// </summary>
+    /// &lt;/summary&gt;
     public static void Clear()
     {
         lock (sm_timings)
@@ -383,13 +411,16 @@ public static class ScopeTiming
         public int Hits;
         public TimeSpan Allotted;
     }
-    private static Dictionary<string, Scope> sm_timings = new Dictionary<string, Scope>();
+    private static Dictionary&lt;string, Scope&gt; sm_timings = new Dictionary&lt;string, Scope&gt;();
 }
 </pre>
+
     <h3>The Particle Class - C#</h3>
     <p>
         The Stringy class has an array of Particles,
         so they better be structs for good data locality.
+    </p>
+    <p>
         NOTE:
         ToString turns out to be wicked fast,
         but FromString does not have to be fast as it's app side, running at human time,
@@ -494,96 +525,16 @@ namespace StringShear
 
     <h3>The Particle Class - C++</h3>
     <p>
-        Remarkably similar to the C# version.
-        No string serialization to be found.
+        Identical code to the C# version, but no serialization to be found.
     </p>
-<pre>
-#pragma once
-
-#include &lt;math.h&gt;
-#include &lt;exception&gt;
-
-namespace...
-struct Particle
-{
-    double x;
-    double y;
-    double vel;
-    double acl;
-    double punch;
-    double nextNeighborFactor;
-
-    Particle()
-    {
-        memset(this, 0, sizeof(Particle));
-    }
-
-    Particle(double _x, double _y = 0, double _vel = 0, double _acl = 0, double _punch = 0, double _next = 0)
-    {
-        x = _x;
-        y = _y;
-        vel = _vel;
-        acl = _acl;
-        punch = _punch;
-        nextNeighborFactor = _next;
-    }
-
-    double GetVal(unsigned index) const
-    {
-        switch (index)
-        {
-        case 0: return x;
-        case 1: return y;
-        case 2: return vel;
-        case 3: return acl;
-        case 4: return punch;
-        default: throw std::exception("Particle::GetVal invalid index");
-        }
-    }
-
-    void Reset()
-    {
-        // NOTE: Leave x position alone
-        y = vel = acl = punch = nextNeighborFactor = 0.0;
-    }
-
-    // Update the y value for this, computing vel and acl and punch,
-    // and returning the work performed (acl * distance)
-    // This is used for endpoints of the string
-    double SetPosY(double newPosY, double elapsedTime, double time)
-    {
-        double newDisplacement = (newPosY - y);
-
-        double newVel = newDisplacement / elapsedTime;
-
-        double newAcl = (newVel - vel) / elapsedTime;
-        if (time <= elapsedTime)
-            newAcl = 0.0;
-
-        double newPunch = (newAcl - acl) / elapsedTime;
-        if (time <= elapsedTime * 2.0)
-            newPunch = 0.0;
-
-        double workDone = newDisplacement * acl;
-
-        y = newPosY;
-        vel = newVel;
-        acl = newAcl;
-        punch = newPunch;
-
-        return fabs(workDone);
-    }
-};
-</pre>
 
     <h3>The String(y) Class - C#</h3>
     <pre>
 // Define a string as a list of particles,
 // and track the maximum position, velocity, acceleration, and punch of this,
 // and the work done to move the end points, and the max work required to move the end points
-...
+using ...
 namespace...
-
 public class Stringy
 {
     Particle[] m_particles;
@@ -643,7 +594,7 @@ public class Stringy
         ScopeTiming.RecordScope("Stringy.ToString.TheRest", m_sw); // no time
 
         string str = sb.ToString();
-        ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", m_sw);
+        ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", m_sw); // no time
         return str;
     }
 
@@ -720,7 +671,7 @@ public class Stringy
             m_maxEndWork = newEndWork;
 
         //
-        // Here's the magic from the textbook...
+        // Here's the magic from the textbook diagram...
         //
 
         // Compute neighbor factors.
@@ -765,12 +716,12 @@ public class Stringy
 
     <h3>The String(y) Class - C++</h3>
     <p>
-        The C++ code is line for line identical to the C# code, except...
-        Serialization.  Our goal is to turn the string into, well, a std::string, as fast as possible.
+        The C++ code is line for line identical to the C# code, except for...serialization.
+        Our goal is to turn the string into, well, a std::string, as fast as possible.
         Here's my best effort, please propose something better.
         Having the sprintf_s inside the Particle class is not better.
-        Passing around a stringstream is not better.
-        We need something much better...and let's give it a try.
+        Passing a stringstream around is not better.
+        I need something much better.
     </p>
     <pre>
 void AppendToString(std::string& str) const
@@ -778,12 +729,12 @@ void AppendToString(std::string& str) const
     m_sw.Start();
 
     str += "particles:";
-    char buffer[4096];
+    char buffer[4096]; // should be enough room for six doubles
     for (const auto& p : m_particles)
     {
         sprintf_s(buffer, sizeof(buffer), 
-                    "%f,%f,%f,%f,%f,%f|",
-                    p.x, p.y, p.vel, p.acl, p.punch, p.nextNeighborFactor);
+                  "%f,%f,%f,%f,%f,%f|",
+                  p.x, p.y, p.vel, p.acl, p.punch, p.nextNeighborFactor);
         str += buffer;
     }
     str += ";";
@@ -813,24 +764,30 @@ void AppendToString(std::string& str) const
 </pre>
 
     <h3>The Simulation Class - C#</h3>
-<pre>
+    <pre>
 ...
 public class Simulation
 {
     public const int cParticleCount = 1000;
     public const double cStringConstant = 0.03164; // magic number
     public const double cStringLength = 1.0; // meter
-    public const double cOscillatorAmplitude = 0.001; // mm
+    public const double cOscillatorAmplitude = 0.001; // not much, just a mm per frequency
     ...
     public void Update()
     {
+        // Bail if we're paused, but sleep to keep the processor cool.
+        if (m_bPaused)
+        {
+            Thread.Sleep(200);
+            return;
+        }
+
         // Delay.  Outside the thread safety lock.
         int delayMs = 0;
         {
             lock (this)
             {
                 delayMs = m_delayMs;
-
                 if (delayMs > 0)
                 {
                     if (m_delayMod > 0)
@@ -840,13 +797,6 @@ public class Simulation
                     }
                 }
             }
-        }
-
-        // Bail if we're paused, but sleep to keep the processor cool.
-        if (m_bPaused)
-        {
-            Thread.Sleep(200);
-            return;
         }
 
         // Yield to the main application thread to cool off the CPU...
@@ -866,11 +816,11 @@ public class Simulation
                 foreach (double frequency in m_leftFrequencies)
                 {
                     startPos += GetOscillatorPosition(frequency,
-                                                        cOscillatorAmplitude,
-                                                        m_bJustPulse,
-                                                        m_bJustHalfPulse,
-                                                        m_outOfPhase,
-                                                        m_time);
+                                                      cOscillatorAmplitude,
+                                                      m_bJustPulse,
+                                                      m_bJustHalfPulse,
+                                                      m_outOfPhase,
+                                                      m_time);
                 }
             }
 
@@ -929,7 +879,7 @@ public class Simulation
         }
     }
 
-    // Get the position of this at a particular time
+    // Get the position of this oscillator at a particular time
     public static double // static to ensure purity of processing
         GetOscillatorPosition
         (
@@ -968,7 +918,24 @@ public class Simulation
         What the...
     </p>
 
+    <h3>HttpListener and WebClient - Inter-process communication made easy</h3>
+    <p>
+        I chose System.Net.HttpListener and System.Net.WebClient for the inter-process communication.
+        They are simple and easy to use,
+        and I highly recommend them for all your client-server needs, in C# or C++/CLI.
+        Beats the hell out of socket / bind / listen / accept / recv / send...
+    </p>
+
     <h3>Performance Profile - C#</h3>
+    <p>
+        Here is the output from ScopeTiming.
+        For each scope ("Output.StreamWriter") it lists...
+        <ol>
+            <li>How many times called (hits)</li>
+            <li>How much total time spent in the scope ("ms total")</li>
+            <li>The average amount of time spent in the scope ("ms avg")</li>
+        </ol>
+    </p>
 <pre>
 Output.StreamWriter -> 281 hits - 1898 ms total -> 6.75605 ms avg
 Output.ToString -> 281 hits - 3145 ms total -> 11.191 ms avg
@@ -990,34 +957,49 @@ Update -> 709880 hits - 21241.036000 ms total -> 0.029922 ms avg
     <h3>Performance Comparison</h3>
     <p>
         You can see that sending strings from the servers to the app, the Output steps,
-        are quite different, 30 C++ vs. 11 C# for ToString (wow!), and 4.7 vs. 6.7 for StreamWriter (strange!).
-        Why is computing the string so much slower for C++?
-        And why is the StreamWriter step slower for C#?  That .NET code should be near identical.
+        are quite different:
+        30 C++ vs. 11 C# for ToString (wow!), and 4.7 vs. 6.7 for StreamWriter (strange!).
     </p>
     <p>
-        Looking into the String.ToString, the big difference is how the particles are added to the string.
-        Which is baffling how C#'s $"{x}..." is faster than C++'s sprintf_s.  A lot faster.  Riddle me that one!
+        Why is computing the std::string so much slower for C++ than doing StringBuilder in C#?
     </p>
     <p>
-        And the Update step is near identical between C++ and C#.  C# is even a little faster.
-        The implementations are line-for-line identical, this one makes no sense.
+        And why is the StreamWriter step significantly slower for C#?
+        The .NET code should be near identical in the two .NET Main function environments.
+    </p>
+    <p>
+        Looking into the performance of String.ToString, 
+        the big difference is how the particles' text are added to the output.
+        Which is baffling how C#'s $"{x}..." is faster than C++'s sprintf_s,
+        or Linq and StringBuilder are faster that a loop over a vector and std::string concatenation.  
+        A lot faster.  
+        Riddle me that one!
+    </p>
+    <p>
+        And the Update computational step is near identical between C++ and C#.  
+        C# is even a little faster!
     </p>
 
     <h2>Conclusion and Points of Interest</h2>
     <p>
         This has been a great game of software development, tuning, measurement, and optimization.
         The results are remarkable: there's no benefit to using C++ vs. C# for this application.
-        C#'s $ string builder outruns C++'s sprintf_s.
     </p>
     <p>
         Back to mad science...
     </p>
     <p>
-        If you're game, try picking some frequencies and shear the string, cause a particle to fly off,
-        see something interesting, and share what you found.
+        You may be wondering where the name StringShear came from.
+        If you're game, try picking some frequencies to shear the string, to cause a particle to fly off,
+        or to see something interesting, and share what you found.
+        Such repeatable, noteworthy findings could be of scientific value.
+        Well, at least it's fun to play with.
     </p>
     <p>
-        Or have at the code, explore performance profiles by adding more timing, try speeding things up.
+        And have at the code, explore performance profiles by adding more timing, try speeding things up.
+    </p>
+    <p>
+        Enjoy!
     </p>
 
     <!-------------------------------    That's it!   --------------------------->

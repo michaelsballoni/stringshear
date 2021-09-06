@@ -16,9 +16,6 @@ public:
     const double cStringLength = 1.0; // meter
     const double cOscillatorAmplitude = 0.001; // mm
 
-    // https://stackoverflow.com/questions/1727881/how-to-use-the-pi-constant-in-c
-    const double PI = 3.141592653589793238462643383279502884L;
-
 private:
     bool m_bPaused = true;
 
@@ -185,8 +182,6 @@ private:
 
     void Update()
     {
-        m_simulationCycle++;
-
         // Bail if we're paused, but sleep to keep the processor cool.
         if (m_bPaused)
         {
@@ -217,6 +212,8 @@ private:
         CSLock lock(m_mutex);
 
         m_computeStopwatch.Start();
+
+        m_simulationCycle++;
 
         double startPos = 0.0;
         if (m_bLeftEnabled)
@@ -311,8 +308,8 @@ private:
         m_maxPunchString.Reset();
     }
 
-    // Get the position of this at a particular time
-    double
+    // Get the position of this oscillator at a particular time
+    static double
     GetOscillatorPosition
     (
         double frequency,
@@ -323,6 +320,9 @@ private:
         double time
     )
     {
+        // https://stackoverflow.com/questions/1727881/how-to-use-the-pi-constant-in-c
+        static const double PI = 3.141592653589793238462643383279502884L;
+
         double radians = 2.0 * PI * frequency * time;
 
         radians -= outOfPhase * PI;

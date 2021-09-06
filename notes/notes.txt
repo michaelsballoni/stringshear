@@ -1,8 +1,9 @@
 //
 // Todo
 //
-Analyze the Update function(s)
-Explore Update performance
+Refine article
+ZIP up the source and ZIP up the article
+Submit article!
 
 //
 // Performance

@@ -93,7 +93,7 @@ public:
         m_sw.Start();
 
         str += "particles:";
-        char buffer[4096];
+        char buffer[4096]; // should be enough room for six doubles
         for (const auto& p : m_particles)
         {
             sprintf_s(buffer, sizeof(buffer), 
