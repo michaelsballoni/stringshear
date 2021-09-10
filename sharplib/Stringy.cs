@@ -34,8 +34,6 @@ namespace StringShear
 
         bool m_waveDownAndBackYet;
 
-        Stopwatch m_sw = new Stopwatch();
-
         public Stringy(Particle[] particles, double length)
         {
             m_length = length;
@@ -55,14 +53,11 @@ namespace StringShear
 
         public override string ToString()
         {
-            m_sw.Restart(); // we (re)use a Stopwatch for seeing what takes time
+            Stopwatch sw = ScopeTiming.StartTiming();
             StringBuilder sb = new StringBuilder();
 
-            // Somehow this piece of Linq outperforms the C++ counterpart around 40% 1.7ms vs. 2.4ms
             sb.Append("particles:" + string.Join("|", m_particles.Select(p => p.ToString())) + ";");
-            ScopeTiming.RecordScope("Stringy.ToString.Particles", m_sw);
-            // ScopeTiming.RecordScope records how long the Stopwatch.Elapsed
-            // associated with the name "String.To..." and does a Stopwatch.Restart()
+            ScopeTiming.RecordScope("Stringy.ToString.Particles", sw);
 
             sb.Append("length:" + m_length + ";");
 
@@ -81,10 +76,10 @@ namespace StringShear
 
             sb.Append("maxStartWork:" + m_maxStartWork + ";");
             sb.Append("maxEndWork:" + m_maxEndWork + ";");
-            ScopeTiming.RecordScope("Stringy.ToString.TheRest", m_sw); // no time
+            ScopeTiming.RecordScope("Stringy.ToString.TheRest", sw); // no time
 
             string str = sb.ToString();
-            ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", m_sw); // no time
+            ScopeTiming.RecordScope("Stringy.ToString.sb.ToString", sw); // no time
             return str;
         }
 

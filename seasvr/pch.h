@@ -9,6 +9,8 @@
 #include <math.h>
 
 #include <algorithm>
+#include <array>
+#include <charconv>
 #include <chrono>
 #include <exception>
 #include <memory>

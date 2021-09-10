@@ -18,8 +18,7 @@ public:
     double GetElapsedMs()
     {
         return
-            std::chrono::duration_cast<std::chrono::microseconds>
-            (m_timer.now() - m_start).count()
+            std::chrono::duration_cast<std::chrono::microseconds>(m_timer.now() - m_start).count()
             / 1000.0;
     }
 

@@ -48,7 +48,6 @@ private:
     bool m_bJustHalfPulse = false;
     double m_outOfPhase = 0.0;
 
-    Stopwatch m_computeStopwatch;
     std::shared_ptr<std::thread> m_computeThread;
 
     CSection m_mutex;
@@ -120,11 +119,13 @@ public:
         }
     }
 
-    void ToString(std::string& str)
+    std::string ToString(std::array<char, 1024 * 1024>& particlesBuffer)
     {
-        CSLock lock(m_mutex);
+        std::string str;
 
-        str.clear();
+        Stopwatch sw;
+        CSLock lock(m_mutex);
+        ScopeTiming::GetObj().RecordScope("Simulation.Lock", sw);
 
         str += "time:" + std::to_string(m_time) + "\n";
 
@@ -132,18 +133,22 @@ public:
         str += "maxVelTime:" + std::to_string(m_maxVelTime) + "\n";
         str += "maxAclTime:" + std::to_string(m_maxAclTime) + "\n";
         str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + "\n";
+        ScopeTiming::GetObj().RecordScope("Simulation.Stuff", sw);
 
-        AppendString("string:", str, m_string);
-        AppendString("maxPosString:", str, m_maxPosString);
-        AppendString("maxVelString:", str, m_maxVelString);
-        AppendString("maxAclString:", str, m_maxAclString);
-        AppendString("maxPunchString:", str, m_maxPunchString);
+        AppendString("string:", str, particlesBuffer, m_string);
+        AppendString("maxPosString:", str, particlesBuffer, m_maxPosString);
+        AppendString("maxVelString:", str, particlesBuffer, m_maxVelString);
+        AppendString("maxAclString:", str, particlesBuffer, m_maxAclString);
+        AppendString("maxPunchString:", str, particlesBuffer, m_maxPunchString);
+        ScopeTiming::GetObj().RecordScope("Simulation.AppendStrings", sw);
+
+        return str;
     }
 
-    static void AppendString(const char* name, std::string& str, const Stringy& stringy)
+    static void AppendString(const char* name, std::string& str, std::array<char, 1024 * 1024>& particlesBuffer, const Stringy& stringy)
     {
         str += name;
-        stringy.AppendToString(str);
+        stringy.AppendToString(str, particlesBuffer);
         str += '\n';
     }
 
@@ -209,9 +214,8 @@ private:
         if (delayMs >= 0)
             std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
 
+        Stopwatch sw;
         CSLock lock(m_mutex);
-
-        m_computeStopwatch.Start();
 
         m_simulationCycle++;
 
@@ -281,7 +285,7 @@ private:
 
         m_time += m_timeSlice;
 
-        ScopeTiming::GetObj().RecordScope("Update", m_computeStopwatch);
+        ScopeTiming::GetObj().RecordScope("Update", sw);
     }
 
     void Reset()
@@ -309,7 +313,7 @@ private:
     }
 
     // Get the position of this oscillator at a particular time
-    static double
+    static double // static for purity of computation
     GetOscillatorPosition
     (
         double frequency,

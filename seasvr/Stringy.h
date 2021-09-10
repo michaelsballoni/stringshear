@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <array>
+#include <charconv>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -34,8 +36,6 @@ private:
     double m_maxEndWork = 0;
 
     bool m_waveDownAndBackYet = false;
-
-    mutable Stopwatch m_sw;
 
 public:
     Stringy() {}
@@ -88,22 +88,46 @@ public:
         return *this;
     }
 
-    void AppendToString(std::string& str) const
+    void AppendToString(std::string& str, std::array<char, 1024 * 1024>& particlesBuffer) const
     {
-        m_sw.Start();
-
+        Stopwatch sw;
         str += "particles:";
-        char buffer[4096]; // should be enough room for six doubles
-        for (const auto& p : m_particles)
         {
-            sprintf_s(buffer, sizeof(buffer), 
-                      "%f,%f,%f,%f,%f,%f|",
-                      p.x, p.y, p.vel, p.acl, p.punch, p.nextNeighborFactor);
-            str += buffer;
+            char* start = particlesBuffer.data();
+            char* end = start + particlesBuffer.size() - 1;
+            std::to_chars_result result;
+            for (const auto& p : m_particles)
+            {
+                result = std::to_chars(start, end, p.x);
+                if (result.ec != std::errc()) throw std::exception("to_chars error");
+                *result.ptr = ',';
+                start = result.ptr + 1;
+                result = std::to_chars(start, end, p.y);
+                if (result.ec != std::errc()) throw std::exception("to_chars error");
+                *result.ptr = ',';
+                start = result.ptr + 1;
+                result = std::to_chars(start, end, p.vel);
+                if (result.ec != std::errc()) throw std::exception("to_chars error");
+                *result.ptr = ',';
+                start = result.ptr + 1;
+                result = std::to_chars(start, end, p.acl);
+                if (result.ec != std::errc()) throw std::exception("to_chars error");
+                *result.ptr = ',';
+                start = result.ptr + 1;
+                result = std::to_chars(start, end, p.punch);
+                if (result.ec != std::errc()) throw std::exception("to_chars error");
+                *result.ptr = ',';
+                start = result.ptr + 1;
+                result = std::to_chars(start, end, p.nextNeighborFactor);
+                if (result.ec != std::errc()) throw std::exception("to_chars error");
+                *result.ptr = '|';
+                start = result.ptr + 1;
+            }
+            *start = '\0';
+            str += particlesBuffer.data();
         }
         str += ";";
-        ScopeTiming::GetObj().RecordScope("String.AppendToString.Particles", m_sw);
-        // This step here is about 40% slower than the Linq-based C# version...weird!
+        ScopeTiming::GetObj().RecordScope("String.AppendToString.Particles", sw);
 
         str += "length:" + std::to_string(m_length) + ";";
 
@@ -123,7 +147,7 @@ public:
         str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
         str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
 
-        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", m_sw); // not much
+        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", sw); // not much
     }
 
     // Get the maximums

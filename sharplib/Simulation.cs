@@ -109,23 +109,30 @@ namespace StringShear
 
         public override string ToString()
         {
+            Stopwatch sw = ScopeTiming.StartTiming();
             StringBuilder sb = new StringBuilder();
             lock (this)
             {
+                ScopeTiming.RecordScope("Simulation.Lock", sw);
+
                 sb.Append("time:" + m_time + "\n");
 
                 sb.Append("maxPosTime:" + m_maxPosTime + "\n");
                 sb.Append("maxVelTime:" + m_maxVelTime + "\n");
                 sb.Append("maxAclTime:" + m_maxAclTime + "\n");
                 sb.Append("maxPunchTime:" + m_maxPunchTime + "\n");
+                ScopeTiming.RecordScope("Simulation.Stuff", sw);
 
                 sb.Append("string:" + m_string + "\n");
                 sb.Append("maxPosString:" + m_maxPosString + "\n");
                 sb.Append("maxVelString:" + m_maxVelString + "\n");
                 sb.Append("maxAclString:" + m_maxAclString + "\n");
                 sb.Append("maxPunchString:" + m_maxPunchString + "\n");
+                ScopeTiming.RecordScope("Simulation.AppendStrings", sw);
             }
-            return sb.ToString();
+            string str = sb.ToString();
+            ScopeTiming.RecordScope("Simulation.sb.ToString", sw);
+            return str;
         }
 
         public void Update()

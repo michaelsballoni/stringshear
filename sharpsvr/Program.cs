@@ -50,19 +50,22 @@ namespace StringShear
                     string state = sim.ToString();
                     ScopeTiming.RecordScope("Output.ToString", sw);
 
-                    sw.Restart();
                     using (StreamWriter writer = new StreamWriter(ctxt.Response.OutputStream))
                         writer.Write(state);
                     ScopeTiming.RecordScope("Output.StreamWriter", sw);
                 }
                 else
                 {
+                    sw.Restart();
                     string settings;
                     using (StreamReader reader = new StreamReader(ctxt.Request.InputStream))
                         settings = reader.ReadToEnd();
-                    ctxt.Response.OutputStream.Close();
+                    ScopeTiming.RecordScope("Settings.StreamReader", sw);
+
                     sim.ApplySettings(settings);
+                    ScopeTiming.RecordScope("Settings.Apply", sw);
                 }
+                ctxt.Response.OutputStream.Close();
 #if DEBUG
                 Console.Write("!");
 #endif

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ScopeTiming.h"
-#include "Simulation.h"
+#include "Global.h"
 
 #include <msclr\marshal.h>
 
@@ -34,7 +34,7 @@ int main(array<System::String ^> ^args)
     ScopeTiming::GetObj().Init(true);
 
     Console::Write("Starting simulation...");
-    Simulation sim;
+    StartSimulation();
     Console::WriteLine("done!");
 
     Console::Write("Setting up server...");
@@ -46,8 +46,6 @@ int main(array<System::String ^> ^args)
     std::thread statsThread(RunStats);
 
     Stopwatch sw;
-    std::string state;
-    state.reserve(1024 * 1024);
     while (true)
     {
 #ifdef _DEBUG
@@ -60,21 +58,28 @@ int main(array<System::String ^> ^args)
         if (ctxt->Request->HttpMethod == "GET")
         {
             sw.Start();
-            sim.ToString(state);
-            ScopeTiming::GetObj().RecordScope("main.ToString", sw);
+
+            std::string state = GetSimState();
+            ScopeTiming::GetObj().RecordScope("Output.ToString", sw);
 
             StreamWriter^ writer = gcnew StreamWriter(ctxt->Response->OutputStream);
             writer->Write(gcnew String(state.c_str()));
             delete writer;
-            ScopeTiming::GetObj().RecordScope("main.StreamWriter", sw);
+            ScopeTiming::GetObj().RecordScope("Output.StreamWriter", sw);
         }
         else
         {
+            sw.Start();
+
             StreamReader^ reader = gcnew StreamReader(ctxt->Request->InputStream);
-            sim.ApplySettings(StringToString(reader->ReadToEnd()));
+            std::string settings = StringToString(reader->ReadToEnd());
             delete reader;
-            delete ctxt->Response->OutputStream;
+            ScopeTiming::GetObj().RecordScope("Settings.StreamReader", sw);
+
+            ApplySimSettings(settings);
+            ScopeTiming::GetObj().RecordScope("Settings.Apply", sw);
         }
+        delete ctxt->Response->OutputStream;
 #ifdef _DEBUG
         Console::Write("!");
 #endif
