@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		article\article.htm = article\article.htm
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sealib", "sealib\sealib.vcxproj", "{08B715B1-C311-4D6F-839B-0059407F2D28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,16 @@ Global
 		{6D66E18E-1109-4CD6-8A9F-C1E5C3969E06}.Release|x64.Build.0 = Release|x64
 		{6D66E18E-1109-4CD6-8A9F-C1E5C3969E06}.Release|x86.ActiveCfg = Release|Win32
 		{6D66E18E-1109-4CD6-8A9F-C1E5C3969E06}.Release|x86.Build.0 = Release|Win32
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Debug|x64.ActiveCfg = Debug|x64
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Debug|x64.Build.0 = Debug|x64
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Debug|x86.ActiveCfg = Debug|Win32
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Debug|x86.Build.0 = Debug|Win32
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|Any CPU.ActiveCfg = Release|Win32
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x64.ActiveCfg = Release|x64
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x64.Build.0 = Release|x64
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x86.ActiveCfg = Release|Win32
+		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

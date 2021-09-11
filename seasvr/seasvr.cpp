@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "ScopeTiming.h"
-#include "Global.h"
+#include "../sealib/sealib.h"
 
 #include <msclr\marshal.h>
 
@@ -9,6 +8,7 @@
 using namespace System;
 using namespace System::IO;
 using namespace System::Net;
+using namespace System::Diagnostics;
 
 using namespace msclr::interop;
 
@@ -25,14 +25,30 @@ void RunStats()
     while (true)
     {
         std::this_thread::sleep_for(std::chrono::seconds(3));
-        printf("%s\n\n", ScopeTiming::GetObj().GetSummary().c_str());
+        
+        std::string seaTiming = GetTimingSummary();
+        std::string svrTiming = StringToString(StringShear::ScopeTiming::Summary);
+
+        std::string timing;
+        if (!seaTiming.empty())
+            timing += seaTiming;
+
+        if (!svrTiming.empty())
+        {
+            if (!timing.empty())
+                timing += '\n';
+            timing += svrTiming;
+        }
+
+        if (!timing.empty())
+            timing += '\n';
+
+        printf("%s\n", timing.c_str());
     }
 }
 
 int main(array<System::String ^> ^args)
 {
-    ScopeTiming::GetObj().Init(true);
-
     Console::Write("Starting simulation...");
     StartSimulation();
     Console::WriteLine("done!");
@@ -45,7 +61,7 @@ int main(array<System::String ^> ^args)
 
     std::thread statsThread(RunStats);
 
-    Stopwatch sw;
+    Stopwatch^ sw = gcnew Stopwatch();
     while (true)
     {
 #ifdef _DEBUG
@@ -57,27 +73,27 @@ int main(array<System::String ^> ^args)
 #endif
         if (ctxt->Request->HttpMethod == "GET")
         {
-            sw.Start();
+            sw->Restart();
 
             std::string state = GetSimState();
-            ScopeTiming::GetObj().RecordScope("Output.ToString", sw);
+            StringShear::ScopeTiming::RecordScope("Output.ToString", sw);
 
             StreamWriter^ writer = gcnew StreamWriter(ctxt->Response->OutputStream);
             writer->Write(gcnew String(state.c_str()));
             delete writer;
-            ScopeTiming::GetObj().RecordScope("Output.StreamWriter", sw);
+            StringShear::ScopeTiming::RecordScope("Output.StreamWriter", sw);
         }
         else
         {
-            sw.Start();
+            sw->Restart();
 
             StreamReader^ reader = gcnew StreamReader(ctxt->Request->InputStream);
             std::string settings = StringToString(reader->ReadToEnd());
             delete reader;
-            ScopeTiming::GetObj().RecordScope("Settings.StreamReader", sw);
+            StringShear::ScopeTiming::RecordScope("Settings.StreamReader", sw);
 
-            ApplySimSettings(settings);
-            ScopeTiming::GetObj().RecordScope("Settings.Apply", sw);
+            ApplySimSettings(settings.c_str());
+            StringShear::ScopeTiming::RecordScope("Settings.Apply", sw);
         }
         delete ctxt->Response->OutputStream;
 #ifdef _DEBUG

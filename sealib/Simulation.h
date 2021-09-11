@@ -119,11 +119,12 @@ public:
         }
     }
 
-    std::string ToString(std::array<char, 1024 * 1024>& particlesBuffer)
+    void ToString(std::string& str, std::array<char, 1024 * 1024>& particlesBuffer)
     {
-        std::string str;
-
         Stopwatch sw;
+        str.clear();
+        ScopeTiming::GetObj().RecordScope("Simulation.Clear", sw);
+
         CSLock lock(m_mutex);
         ScopeTiming::GetObj().RecordScope("Simulation.Lock", sw);
 
@@ -141,8 +142,6 @@ public:
         AppendString("maxAclString:", str, particlesBuffer, m_maxAclString);
         AppendString("maxPunchString:", str, particlesBuffer, m_maxPunchString);
         ScopeTiming::GetObj().RecordScope("Simulation.AppendStrings", sw);
-
-        return str;
     }
 
     static void AppendString(const char* name, std::string& str, std::array<char, 1024 * 1024>& particlesBuffer, const Stringy& stringy)
