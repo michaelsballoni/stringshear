@@ -27,7 +27,6 @@ const char* GetSimState()
 std::string timingSummary;
 const char* GetTimingSummary()
 {
-	//printf("Enabled: %d - len: %u\n", (int)ScopeTiming::GetObj().m_enabled, ScopeTiming::GetObj().GetSummary().size());
 	timingSummary = ScopeTiming::GetObj().GetSummary();
 	return timingSummary.c_str();
 }

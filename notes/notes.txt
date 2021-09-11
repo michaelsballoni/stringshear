@@ -1,9 +1,11 @@
 //
 // Todo
 //
+Do All Out performance result collection for 60ms of simulation time
+Analyze results
 Refine article
-ZIP up the source and ZIP up the article
-Submit article!
+Update article with new Update section on what done to get results
+Update code ZIP
 
 //
 // Performance

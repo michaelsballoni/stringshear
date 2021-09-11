@@ -1,0 +1,16 @@
+//
+// C++ - All Out, so can't compare with earlier results
+//
+Output.StreamWriter -> 341 hits - 4568 ms total -> 13.39665 ms avg
+Output.ToString -> 341 hits - 9807 ms total -> 28.75838 ms avg
+Settings.Apply -> 3 hits - 0 ms total -> 0.0707 ms avg // way faster!
+Settings.StreamReader -> 3 hits - 3 ms total -> 0.95383 ms avg
+
+Simulation.AppendStrings -> 341 hits - 1578.045000 ms total -> 4.627698 ms avg
+Simulation.Lock -> 341 hits - 8019.378000 ms total -> 23.517238 ms avg
+Simulation.Clear -> 341 hits - 1.450000 ms total -> 0.004252 ms avg
+Simulation.Stuff -> 341 hits - 8.308000 ms total -> 0.024364 ms avg
+String.AppendToString.Particles -> 1705 hits - 1541.550000 ms total -> 0.904135 ms avg
+String.AppendToString.TheRest -> 1705 hits - 33.955000 ms total -> 0.019915 ms avg
+Update -> 1470821 hits - 35601.485001 ms total -> 0.024205 ms avg
+
