@@ -50,22 +50,26 @@ public:
         if (!m_enabled)
             return;
 
-        CSLock lock(m_mutex);
+        auto elapsedMs = sw.GetElapsedMs();
 
-        auto it = m_timings.find(scope);
-        if (it == m_timings.end())
         {
-            Scope scopeObj;
-            scopeObj.ScopeName = scope;
-            scopeObj.Hits = 1;
-            scopeObj.Allotted = sw.GetElapsedMs();
-            m_timings[scope] = scopeObj;
-        }
-        else
-        {
-            Scope& scopeObj = it->second;
-            ++scopeObj.Hits;
-            scopeObj.Allotted += sw.GetElapsedMs();
+            CSLock lock(m_mutex);
+
+            auto it = m_timings.find(scope);
+            if (it == m_timings.end())
+            {
+                Scope scopeObj;
+                scopeObj.ScopeName = scope;
+                scopeObj.Hits = 1;
+                scopeObj.Allotted = elapsedMs;
+                m_timings[scope] = scopeObj;
+            }
+            else
+            {
+                Scope& scopeObj = it->second;
+                ++scopeObj.Hits;
+                scopeObj.Allotted += elapsedMs;
+            }
         }
 
         sw.Start();
@@ -79,20 +83,21 @@ public:
         if (!m_enabled)
             return "";
 
-        CSLock lock(m_mutex);
-
         std::vector<std::string> sb;
-        for (const auto& it : m_timings)
         {
-            const Scope& obj = it.second;
-            if (obj.Hits == 0)
-                continue;
+            CSLock lock(m_mutex);
+            for (const auto& it : m_timings)
+            {
+                const Scope& obj = it.second;
+                if (obj.Hits == 0)
+                    continue;
 
-            std::string summary;
-            summary += std::string(obj.ScopeName) + " -> " + std::to_string(obj.Hits) + " hits - ";
-            summary += std::to_string(obj.Allotted) + " ms total -> ";
-            summary += std::to_string(obj.Allotted / obj.Hits) + " ms avg";
-            sb.push_back(summary);
+                std::string summary;
+                summary += std::string(obj.ScopeName) + " -> " + std::to_string(obj.Hits) + " hits - ";
+                summary += std::to_string(obj.Allotted) + " ms total -> ";
+                summary += std::to_string(obj.Allotted / obj.Hits) + " ms avg";
+                sb.push_back(summary);
+            }
         }
 
         std::sort(sb.begin(), sb.end());

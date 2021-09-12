@@ -6,6 +6,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sharplib", "sharplib\sharplib.csproj", "{08E7C11F-FBEC-41F9-AEC1-696E34933670}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "app", "app\app.csproj", "{228ABFF5-5CB1-45EA-88B2-608C8D2FB245}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F127BF52-A76E-4656-8132-EA0E112E2AEF} = {F127BF52-A76E-4656-8132-EA0E112E2AEF}
+		{92A850A9-FE4C-48D1-A178-E8A265685004} = {92A850A9-FE4C-48D1-A178-E8A265685004}
+		{08B715B1-C311-4D6F-839B-0059407F2D28} = {08B715B1-C311-4D6F-839B-0059407F2D28}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sharpsvr", "sharpsvr\sharpsvr.csproj", "{F127BF52-A76E-4656-8132-EA0E112E2AEF}"
 EndProject
@@ -16,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sealib", "sealib\sealib.vcxproj", "{08B715B1-C311-4D6F-839B-0059407F2D28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "seasvr", "seasvr\seasvr.csproj", "{92A850A9-FE4C-48D1-A178-E8A265685004}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "seasvr", "seasvr\seasvr.csproj", "{92A850A9-FE4C-48D1-A178-E8A265685004}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

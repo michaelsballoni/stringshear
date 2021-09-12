@@ -46,17 +46,21 @@ namespace StringShear
             if (sw == null)
                 return;
 
+            var elapsedMs = sw.Elapsed;
+
             lock (sm_timings)
             {
                 Scope scopeObj;
                 if (!sm_timings.TryGetValue(scope, out scopeObj))
                 {
-                    scopeObj = new Scope() { ScopeName = scope };
+                    scopeObj = new Scope() { ScopeName = scope, Hits = 1, Allotted = elapsedMs };
                     sm_timings.Add(scope, scopeObj);
                 }
-
-                ++scopeObj.Hits;
-                scopeObj.Allotted += sw.Elapsed;
+                else
+                {
+                    ++scopeObj.Hits;
+                    scopeObj.Allotted += elapsedMs;
+                }
             }
 
             sw.Restart();
