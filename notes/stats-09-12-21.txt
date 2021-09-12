@@ -15,9 +15,9 @@ Update -> 7768502 hits - 205235 ms total -> 0.02642 ms avg // 2X slower
 //
 Simulation.AppendStrings -> 3781 hits - 12345.393000 ms total -> 3.265113 ms avg
 Simulation.Lock -> 3781 hits - 149573.137000 ms total -> 39.559148 ms
-String.ToString.Particles -> 18905 hits - 12056.123000 ms total -> 0.637721 ms avg // 4X faster
+String.ToString.Particles -> 18905 hits - 12056.123000 ms total -> 0.637721 ms avg
 
-Output.StreamWriter -> 3781 hits - 25779 ms total -> 6.81813 ms avg // 25% faster
+Output.StreamWriter -> 3781 hits - 25779 ms total -> 6.81813 ms avg
 Output.ToString -> 3781 hits - 165159 ms total -> 43.68125 ms avg
 
 Update -> 26866573 hits - 412475.618075 ms total -> 0.015353 ms avg 
