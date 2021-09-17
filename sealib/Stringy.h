@@ -296,7 +296,7 @@ public:
             if (fabs(cur) > fabs(max))
             {
                 max = cur;
-                maxPosIndex = i;
+                maxPosIndex = (int)i;
             }
         }
     }

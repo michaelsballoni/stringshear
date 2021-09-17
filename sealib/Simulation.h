@@ -72,9 +72,9 @@ public:
             if (line.empty())
                 continue;
 
-            int colon = line.find(':', 0);
+            size_t colon = line.find(':', 0);
             std::string name = line.substr(0, colon);
-            std::string value = line.substr(colon + 1);
+            std::string value = line.substr(colon + (size_t)1);
             settings[name] = value;
         }
 
