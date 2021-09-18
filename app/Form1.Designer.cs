@@ -65,20 +65,20 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(122, 55);
+            this.label5.Location = new System.Drawing.Point(136, 69);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(43, 60);
+            this.label5.Size = new System.Drawing.Size(51, 75);
             this.label5.TabIndex = 19;
             this.label5.Text = "Hz\r\n/\r\nNote";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 98);
+            this.label1.Location = new System.Drawing.Point(13, 122);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(128, 20);
+            this.label1.Size = new System.Drawing.Size(147, 25);
             this.label1.TabIndex = 31;
             this.label1.Text = "simulation speed";
             // 
@@ -90,20 +90,20 @@
             "Medium",
             "Slow",
             "All Out"});
-            this.speedComboBox.Location = new System.Drawing.Point(15, 122);
-            this.speedComboBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.speedComboBox.Location = new System.Drawing.Point(17, 152);
+            this.speedComboBox.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.speedComboBox.Name = "speedComboBox";
-            this.speedComboBox.Size = new System.Drawing.Size(180, 28);
+            this.speedComboBox.Size = new System.Drawing.Size(200, 33);
             this.speedComboBox.TabIndex = 30;
             this.speedComboBox.Text = "Fast";
             // 
             // mailLink
             // 
             this.mailLink.AutoSize = true;
-            this.mailLink.Location = new System.Drawing.Point(222, 684);
+            this.mailLink.Location = new System.Drawing.Point(247, 855);
             this.mailLink.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.mailLink.Name = "mailLink";
-            this.mailLink.Size = new System.Drawing.Size(122, 20);
+            this.mailLink.Size = new System.Drawing.Size(138, 25);
             this.mailLink.TabIndex = 16;
             this.mailLink.TabStop = true;
             this.mailLink.Text = "stringshear.com";
@@ -111,10 +111,10 @@
             // 
             // copyHeadersButton
             // 
-            this.copyHeadersButton.Location = new System.Drawing.Point(15, 639);
-            this.copyHeadersButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.copyHeadersButton.Location = new System.Drawing.Point(17, 799);
+            this.copyHeadersButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.copyHeadersButton.Name = "copyHeadersButton";
-            this.copyHeadersButton.Size = new System.Drawing.Size(168, 35);
+            this.copyHeadersButton.Size = new System.Drawing.Size(187, 44);
             this.copyHeadersButton.TabIndex = 14;
             this.copyHeadersButton.Text = "Copy Stats Header";
             this.copyHeadersButton.UseVisualStyleBackColor = true;
@@ -122,19 +122,19 @@
             // 
             // copyEdit
             // 
-            this.copyEdit.Location = new System.Drawing.Point(15, 684);
-            this.copyEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.copyEdit.Location = new System.Drawing.Point(17, 855);
+            this.copyEdit.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.copyEdit.Name = "copyEdit";
-            this.copyEdit.Size = new System.Drawing.Size(111, 26);
+            this.copyEdit.Size = new System.Drawing.Size(123, 31);
             this.copyEdit.TabIndex = 29;
             this.copyEdit.Visible = false;
             // 
             // copyStatsButton
             // 
-            this.copyStatsButton.Location = new System.Drawing.Point(192, 639);
-            this.copyStatsButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.copyStatsButton.Location = new System.Drawing.Point(213, 799);
+            this.copyStatsButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.copyStatsButton.Name = "copyStatsButton";
-            this.copyStatsButton.Size = new System.Drawing.Size(153, 35);
+            this.copyStatsButton.Size = new System.Drawing.Size(170, 44);
             this.copyStatsButton.TabIndex = 15;
             this.copyStatsButton.Text = "Copy Stats Values";
             this.copyStatsButton.UseVisualStyleBackColor = true;
@@ -142,10 +142,10 @@
             // 
             // resetMaxButton
             // 
-            this.resetMaxButton.Location = new System.Drawing.Point(15, 594);
-            this.resetMaxButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.resetMaxButton.Location = new System.Drawing.Point(17, 742);
+            this.resetMaxButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.resetMaxButton.Name = "resetMaxButton";
-            this.resetMaxButton.Size = new System.Drawing.Size(330, 35);
+            this.resetMaxButton.Size = new System.Drawing.Size(367, 44);
             this.resetMaxButton.TabIndex = 11;
             this.resetMaxButton.Text = "Reset Maximums";
             this.resetMaxButton.UseVisualStyleBackColor = true;
@@ -153,21 +153,21 @@
             // 
             // timeSliceEdit
             // 
-            this.timeSliceEdit.Location = new System.Drawing.Point(17, 51);
-            this.timeSliceEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.timeSliceEdit.Location = new System.Drawing.Point(19, 64);
+            this.timeSliceEdit.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.timeSliceEdit.Name = "timeSliceEdit";
-            this.timeSliceEdit.Size = new System.Drawing.Size(124, 26);
+            this.timeSliceEdit.Size = new System.Drawing.Size(137, 31);
             this.timeSliceEdit.TabIndex = 0;
             this.timeSliceEdit.Text = "0.01";
             this.timeSliceEdit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // rightFrequenciesEdit
             // 
-            this.rightFrequenciesEdit.Location = new System.Drawing.Point(176, 51);
-            this.rightFrequenciesEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rightFrequenciesEdit.Location = new System.Drawing.Point(196, 64);
+            this.rightFrequenciesEdit.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.rightFrequenciesEdit.Multiline = true;
             this.rightFrequenciesEdit.Name = "rightFrequenciesEdit";
-            this.rightFrequenciesEdit.Size = new System.Drawing.Size(98, 169);
+            this.rightFrequenciesEdit.Size = new System.Drawing.Size(108, 210);
             this.rightFrequenciesEdit.TabIndex = 5;
             this.rightFrequenciesEdit.Text = "30";
             this.rightFrequenciesEdit.WordWrap = false;
@@ -175,10 +175,10 @@
             // justHalfPulseCheck
             // 
             this.justHalfPulseCheck.AutoSize = true;
-            this.justHalfPulseCheck.Location = new System.Drawing.Point(176, 266);
-            this.justHalfPulseCheck.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.justHalfPulseCheck.Location = new System.Drawing.Point(196, 332);
+            this.justHalfPulseCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.justHalfPulseCheck.Name = "justHalfPulseCheck";
-            this.justHalfPulseCheck.Size = new System.Drawing.Size(132, 24);
+            this.justHalfPulseCheck.Size = new System.Drawing.Size(147, 29);
             this.justHalfPulseCheck.TabIndex = 8;
             this.justHalfPulseCheck.Text = "just half pulse";
             this.justHalfPulseCheck.UseVisualStyleBackColor = true;
@@ -186,20 +186,20 @@
             // justPulseCheck
             // 
             this.justPulseCheck.AutoSize = true;
-            this.justPulseCheck.Location = new System.Drawing.Point(176, 231);
-            this.justPulseCheck.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.justPulseCheck.Location = new System.Drawing.Point(196, 289);
+            this.justPulseCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.justPulseCheck.Name = "justPulseCheck";
-            this.justPulseCheck.Size = new System.Drawing.Size(102, 24);
+            this.justPulseCheck.Size = new System.Drawing.Size(113, 29);
             this.justPulseCheck.TabIndex = 7;
             this.justPulseCheck.Text = "just pulse";
             this.justPulseCheck.UseVisualStyleBackColor = true;
             // 
             // tensionEdit
             // 
-            this.tensionEdit.Location = new System.Drawing.Point(15, 198);
-            this.tensionEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tensionEdit.Location = new System.Drawing.Point(17, 248);
+            this.tensionEdit.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.tensionEdit.Name = "tensionEdit";
-            this.tensionEdit.Size = new System.Drawing.Size(260, 26);
+            this.tensionEdit.Size = new System.Drawing.Size(288, 31);
             this.tensionEdit.TabIndex = 1;
             this.tensionEdit.Text = "399565";
             this.tensionEdit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -207,50 +207,50 @@
             // speedLabel
             // 
             this.speedLabel.AutoSize = true;
-            this.speedLabel.Location = new System.Drawing.Point(152, 55);
+            this.speedLabel.Location = new System.Drawing.Point(169, 69);
             this.speedLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.speedLabel.Name = "speedLabel";
-            this.speedLabel.Size = new System.Drawing.Size(30, 20);
+            this.speedLabel.Size = new System.Drawing.Size(36, 25);
             this.speedLabel.TabIndex = 19;
             this.speedLabel.Text = "ms";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 171);
+            this.label3.Location = new System.Drawing.Point(13, 214);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(137, 20);
+            this.label3.Size = new System.Drawing.Size(162, 25);
             this.label3.TabIndex = 13;
             this.label3.Text = "tension / root note";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(276, 55);
+            this.label4.Location = new System.Drawing.Point(307, 69);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(43, 60);
+            this.label4.Size = new System.Drawing.Size(51, 75);
             this.label4.TabIndex = 17;
             this.label4.Text = "Hz\r\n/\r\nNote";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 25);
+            this.label7.Location = new System.Drawing.Point(11, 31);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 20);
+            this.label7.Size = new System.Drawing.Size(82, 25);
             this.label7.TabIndex = 18;
             this.label7.Text = "timeSlice";
             // 
             // displayGroup
             // 
             this.displayGroup.Location = new System.Drawing.Point(2, 2);
-            this.displayGroup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.displayGroup.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.displayGroup.Name = "displayGroup";
-            this.displayGroup.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.displayGroup.Size = new System.Drawing.Size(762, 789);
+            this.displayGroup.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.displayGroup.Size = new System.Drawing.Size(847, 986);
             this.displayGroup.TabIndex = 3;
             this.displayGroup.TabStop = false;
             // 
@@ -266,11 +266,11 @@
             this.groupBox1.Controls.Add(this.rightFrequenciesEdit);
             this.groupBox1.Controls.Add(this.justHalfPulseCheck);
             this.groupBox1.Controls.Add(this.justPulseCheck);
-            this.groupBox1.Location = new System.Drawing.Point(17, 238);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Location = new System.Drawing.Point(19, 298);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(330, 302);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.groupBox1.Size = new System.Drawing.Size(367, 378);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Oscillators";
@@ -278,19 +278,19 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 238);
+            this.label2.Location = new System.Drawing.Point(10, 298);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(129, 20);
+            this.label2.Size = new System.Drawing.Size(150, 25);
             this.label2.TabIndex = 25;
             this.label2.Text = "out of phase (-pi)";
             // 
             // outOfPhaseEdit
             // 
-            this.outOfPhaseEdit.Location = new System.Drawing.Point(9, 261);
-            this.outOfPhaseEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.outOfPhaseEdit.Location = new System.Drawing.Point(10, 326);
+            this.outOfPhaseEdit.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.outOfPhaseEdit.Name = "outOfPhaseEdit";
-            this.outOfPhaseEdit.Size = new System.Drawing.Size(122, 26);
+            this.outOfPhaseEdit.Size = new System.Drawing.Size(135, 31);
             this.outOfPhaseEdit.TabIndex = 6;
             this.outOfPhaseEdit.Text = "0.5";
             this.outOfPhaseEdit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -300,10 +300,10 @@
             this.rightEnabledCheck.AutoSize = true;
             this.rightEnabledCheck.Checked = true;
             this.rightEnabledCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.rightEnabledCheck.Location = new System.Drawing.Point(176, 25);
-            this.rightEnabledCheck.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.rightEnabledCheck.Location = new System.Drawing.Point(196, 31);
+            this.rightEnabledCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.rightEnabledCheck.Name = "rightEnabledCheck";
-            this.rightEnabledCheck.Size = new System.Drawing.Size(127, 24);
+            this.rightEnabledCheck.Size = new System.Drawing.Size(143, 29);
             this.rightEnabledCheck.TabIndex = 4;
             this.rightEnabledCheck.Text = "right enabled";
             this.rightEnabledCheck.UseVisualStyleBackColor = true;
@@ -313,21 +313,21 @@
             this.leftEnabledCheck.AutoSize = true;
             this.leftEnabledCheck.Checked = true;
             this.leftEnabledCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.leftEnabledCheck.Location = new System.Drawing.Point(9, 25);
-            this.leftEnabledCheck.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.leftEnabledCheck.Location = new System.Drawing.Point(10, 31);
+            this.leftEnabledCheck.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.leftEnabledCheck.Name = "leftEnabledCheck";
-            this.leftEnabledCheck.Size = new System.Drawing.Size(118, 24);
+            this.leftEnabledCheck.Size = new System.Drawing.Size(131, 29);
             this.leftEnabledCheck.TabIndex = 2;
             this.leftEnabledCheck.Text = "left enabled";
             this.leftEnabledCheck.UseVisualStyleBackColor = true;
             // 
             // leftFrequenciesEdit
             // 
-            this.leftFrequenciesEdit.Location = new System.Drawing.Point(9, 51);
-            this.leftFrequenciesEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.leftFrequenciesEdit.Location = new System.Drawing.Point(10, 64);
+            this.leftFrequenciesEdit.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.leftFrequenciesEdit.Multiline = true;
             this.leftFrequenciesEdit.Name = "leftFrequenciesEdit";
-            this.leftFrequenciesEdit.Size = new System.Drawing.Size(103, 169);
+            this.leftFrequenciesEdit.Size = new System.Drawing.Size(114, 210);
             this.leftFrequenciesEdit.TabIndex = 3;
             this.leftFrequenciesEdit.Text = "20";
             this.leftFrequenciesEdit.WordWrap = false;
@@ -335,15 +335,16 @@
             // timer1
             // 
             this.timer1.Enabled = true;
+            this.timer1.Interval = 200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // resetButton
             // 
             this.resetButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.resetButton.Location = new System.Drawing.Point(192, 549);
-            this.resetButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.resetButton.Location = new System.Drawing.Point(213, 686);
+            this.resetButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(153, 35);
+            this.resetButton.Size = new System.Drawing.Size(170, 44);
             this.resetButton.TabIndex = 10;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = true;
@@ -351,10 +352,10 @@
             // 
             // pauseRunButton
             // 
-            this.pauseRunButton.Location = new System.Drawing.Point(15, 549);
-            this.pauseRunButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pauseRunButton.Location = new System.Drawing.Point(17, 686);
+            this.pauseRunButton.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.pauseRunButton.Name = "pauseRunButton";
-            this.pauseRunButton.Size = new System.Drawing.Size(168, 35);
+            this.pauseRunButton.Size = new System.Drawing.Size(187, 44);
             this.pauseRunButton.TabIndex = 9;
             this.pauseRunButton.Text = "Run";
             this.pauseRunButton.UseVisualStyleBackColor = true;
@@ -378,24 +379,24 @@
             this.settingsGroup.Controls.Add(this.groupBox1);
             this.settingsGroup.Controls.Add(this.resetButton);
             this.settingsGroup.Controls.Add(this.pauseRunButton);
-            this.settingsGroup.Location = new System.Drawing.Point(764, 2);
-            this.settingsGroup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.settingsGroup.Location = new System.Drawing.Point(849, 2);
+            this.settingsGroup.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.settingsGroup.Name = "settingsGroup";
-            this.settingsGroup.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.settingsGroup.Size = new System.Drawing.Size(352, 725);
+            this.settingsGroup.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.settingsGroup.Size = new System.Drawing.Size(391, 906);
             this.settingsGroup.TabIndex = 2;
             this.settingsGroup.TabStop = false;
             this.settingsGroup.Text = "Settings";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1131, 731);
+            this.ClientSize = new System.Drawing.Size(1257, 914);
             this.Controls.Add(this.displayGroup);
             this.Controls.Add(this.settingsGroup);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "StringShear - Simple Harmonic Motion On A String Simulation";

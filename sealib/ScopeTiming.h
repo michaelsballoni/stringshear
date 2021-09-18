@@ -4,6 +4,7 @@
 #include "Stopwatch.h"
 
 #include <algorithm>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -40,17 +41,25 @@ public:
         m_enabled = enable;
     }
 
+    std::shared_ptr<Stopwatch> StartTiming()
+    {
+        if (!m_enabled)
+            return nullptr;
+        else
+            return std::make_shared<Stopwatch>();
+    }
+
     /// <summary>
     /// Record the time since StartTiming was called
     /// </summary>
     /// <param name="scope">What area of the code would you call this?</param>
     /// <param name="sw">null if not timing, or Stopwatch started timing</param>
-    void RecordScope(const char* scope, Stopwatch& sw)
+    void RecordScope(const char* scope, std::shared_ptr<Stopwatch> sw)
     {
-        if (!m_enabled)
+        if (!m_enabled || sw == nullptr)
             return;
 
-        auto elapsedMs = sw.GetElapsedMs();
+        auto elapsedMs = sw->GetElapsedMs();
 
         {
             CSLock lock(m_mutex);
@@ -72,7 +81,7 @@ public:
             }
         }
 
-        sw.Start();
+        sw->Start();
     }
 
     /// <summary>

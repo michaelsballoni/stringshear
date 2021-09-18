@@ -21,6 +21,9 @@ namespace StringShear
         [DllImport("sealib.dll", CallingConvention = CallingConvention.Cdecl)]
         static extern IntPtr GetTimingSummary();
 
+        [DllImport("sealib.dll", CallingConvention = CallingConvention.Cdecl)]
+        static extern IntPtr GetSimSummary();
+
         static string GetString(IntPtr ptr)
         {
             return Marshal.PtrToStringAnsi(ptr);
@@ -30,8 +33,9 @@ namespace StringShear
         {
             while (true)
             {
-                Thread.Sleep(3 * 1000);
+                Thread.Sleep(2 * 1000);
 
+                /*
                 string seaTiming = GetString(GetTimingSummary());
                 string svrTiming = ScopeTiming.Summary;
 
@@ -50,12 +54,15 @@ namespace StringShear
                     timing += '\n';
 
                 Console.WriteLine(timing);
+                */
+                Console.WriteLine(GetString(GetSimSummary()));
+                Console.WriteLine();
             }
         }
 
         static void Main(string[] args)
         {
-            ScopeTiming.Init(true);
+            //ScopeTiming.Init(true);
 
             Console.Write("Setting up simulation...");
             StartSimulation();
@@ -83,11 +90,11 @@ namespace StringShear
                 {
                     sw.Restart();
                     string state = GetString(GetSimState());
-                    ScopeTiming.RecordScope("Output.ToString", sw);
+                    //ScopeTiming.RecordScope("Output.ToString", sw);
 
                     using (StreamWriter writer = new StreamWriter(ctxt.Response.OutputStream))
                         writer.Write(state);
-                    ScopeTiming.RecordScope("Output.StreamWriter", sw);
+                    //ScopeTiming.RecordScope("Output.StreamWriter", sw);
                 }
                 else
                 {
@@ -95,10 +102,10 @@ namespace StringShear
                     string settings;
                     using (StreamReader reader = new StreamReader(ctxt.Request.InputStream))
                         settings = reader.ReadToEnd();
-                    ScopeTiming.RecordScope("Settings.StreamReader", sw);
+                    //ScopeTiming.RecordScope("Settings.StreamReader", sw);
 
                     ApplySimSettings(settings);
-                    ScopeTiming.RecordScope("Settings.Apply", sw);
+                    //ScopeTiming.RecordScope("Settings.Apply", sw);
                 }
                 ctxt.Response.OutputStream.Close();
 #if DEBUG

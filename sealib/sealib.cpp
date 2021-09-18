@@ -9,7 +9,7 @@ auto particlesBuffer = new std::array<char, 1024 * 1024>();
 void StartSimulation()
 {
 	sim = new Simulation();
-	ScopeTiming::GetObj().Init(true);
+	ScopeTiming::GetObj().Init(false);
 }
 
 void ApplySimSettings(const char* settings)
@@ -29,4 +29,11 @@ const char* GetTimingSummary()
 {
 	timingSummary = ScopeTiming::GetObj().GetSummary();
 	return timingSummary.c_str();
+}
+
+std::string simSummary;
+const char* GetSimSummary()
+{
+	simSummary = sim->ToSummary();
+	return simSummary.c_str();
 }

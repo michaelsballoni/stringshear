@@ -90,7 +90,7 @@ public:
 
     void AppendToString(std::string& str, std::array<char, 1024 * 1024>& particlesBuffer) const
     {
-        Stopwatch sw;
+        auto sw = ScopeTiming::GetObj().StartTiming();
         str += "particles:";
         {
             char* start = particlesBuffer.data();
@@ -147,7 +147,7 @@ public:
         str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
         str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
 
-        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", sw); // not much
+        ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", sw);
     }
 
     // Get the maximums

@@ -32,7 +32,6 @@ namespace StringShear
         Pen greenPen;
         Pen bluePen;
         Pen purplePen;
-        Pen goldPen;
 
         Pen endpointPen;
         Pen maxPosPen;
@@ -70,7 +69,6 @@ namespace StringShear
             greenPen = new Pen(Color.Green);
             bluePen = new Pen(Color.Blue);
             purplePen = new Pen(Color.Purple);
-            goldPen = new Pen(Color.Maroon);
 
             endpointPen = new Pen(Color.Black, 4);
             maxPosPen = new Pen(Color.Red, 4);

@@ -121,7 +121,7 @@ public:
 
     void ToString(std::string& str, std::array<char, 1024 * 1024>& particlesBuffer)
     {
-        Stopwatch sw;
+        auto sw = ScopeTiming::GetObj().StartTiming();
         str.clear();
         ScopeTiming::GetObj().RecordScope("Simulation.Clear", sw);
 
@@ -149,6 +149,18 @@ public:
         str += name;
         stringy.AppendToString(str, particlesBuffer);
         str += '\n';
+    }
+
+    std::string ToSummary()
+    {
+        CSLock lock(m_mutex);
+        std::string summary =
+            "time: " + std::to_string(m_time) +
+            "\npos: " + std::to_string(m_maxPosString.GetMaxPos()) +
+            "\nvel: " + std::to_string(m_maxVelString.GetMaxVel()) +
+            "\nacl: " + std::to_string(m_maxAclString.GetMaxAcl()) +
+            "\npunch: " + std::to_string(m_maxPunchString.GetMaxPunch());
+        return summary;
     }
 
 private:
@@ -213,7 +225,7 @@ private:
         if (delayMs >= 0)
             std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
 
-        Stopwatch sw;
+        auto sw = ScopeTiming::GetObj().StartTiming();
         CSLock lock(m_mutex);
 
         m_simulationCycle++;

@@ -17,4 +17,7 @@ extern "C"
 
 	__declspec(dllexport)
 		const char* GetTimingSummary();
+
+	__declspec(dllexport)
+		const char* GetSimSummary();
 }
