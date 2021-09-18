@@ -88,16 +88,19 @@ public:
         return *this;
     }
 
-    void AppendToString(std::string& str, std::array<char, 1024 * 1024>& particlesBuffer) const
+    void AppendToString(std::string& str) const
     {
+#ifdef TIMING
         auto sw = ScopeTiming::GetObj().StartTiming();
+#endif
         str += "particles:";
         {
-            char* start = particlesBuffer.data();
-            char* end = start + particlesBuffer.size() - 1;
+            std::array<char, 10 * 1024> particlesBuffer;
             std::to_chars_result result;
             for (const auto& p : m_particles)
             {
+                char* start = particlesBuffer.data();
+                char* end = start + particlesBuffer.size() - 1;
                 result = std::to_chars(start, end, p.x);
                 if (result.ec != std::errc()) throw std::exception("to_chars error");
                 *result.ptr = ',';
@@ -122,13 +125,14 @@ public:
                 if (result.ec != std::errc()) throw std::exception("to_chars error");
                 *result.ptr = '|';
                 start = result.ptr + 1;
+                *start = '\0';
+                str += particlesBuffer.data();
             }
-            *start = '\0';
-            str += particlesBuffer.data();
         }
         str += ";";
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("String.AppendToString.Particles", sw);
-
+#endif
         str += "length:" + std::to_string(m_length) + ";";
 
         str += "maxPos:" + std::to_string(m_maxPos) + ";";
@@ -146,8 +150,9 @@ public:
 
         str += "maxStartWork:" + std::to_string(m_maxStartWork) + ";";
         str += "maxEndWork:" + std::to_string(m_maxEndWork) + ";";
-
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("String.AppendToString.TheRest", sw);
+#endif
     }
 
     // Get the maximums

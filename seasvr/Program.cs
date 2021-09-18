@@ -34,8 +34,7 @@ namespace StringShear
             while (true)
             {
                 Thread.Sleep(2 * 1000);
-
-                /*
+#if TIMING
                 string seaTiming = GetString(GetTimingSummary());
                 string svrTiming = ScopeTiming.Summary;
 
@@ -54,7 +53,7 @@ namespace StringShear
                     timing += '\n';
 
                 Console.WriteLine(timing);
-                */
+#endif
                 Console.WriteLine(GetString(GetSimSummary()));
                 Console.WriteLine();
             }
@@ -62,8 +61,9 @@ namespace StringShear
 
         static void Main(string[] args)
         {
-            //ScopeTiming.Init(true);
-
+#if TIMING
+            ScopeTiming.Init(true);
+#endif
             Console.Write("Setting up simulation...");
             StartSimulation();
             Console.WriteLine("done!");
@@ -88,24 +88,34 @@ namespace StringShear
 #endif
                 if (ctxt.Request.HttpMethod == "GET")
                 {
+#if TIMING
                     sw.Restart();
+#endif
                     string state = GetString(GetSimState());
-                    //ScopeTiming.RecordScope("Output.ToString", sw);
-
+#if TIMING
+                    ScopeTiming.RecordScope("Output.ToString", sw);
+#endif
                     using (StreamWriter writer = new StreamWriter(ctxt.Response.OutputStream))
                         writer.Write(state);
-                    //ScopeTiming.RecordScope("Output.StreamWriter", sw);
+#if TIMING
+                    ScopeTiming.RecordScope("Output.StreamWriter", sw);
+#endif
                 }
                 else
                 {
+#if TIMING
                     sw.Restart();
+#endif
                     string settings;
                     using (StreamReader reader = new StreamReader(ctxt.Request.InputStream))
                         settings = reader.ReadToEnd();
-                    //ScopeTiming.RecordScope("Settings.StreamReader", sw);
-
+#if TIMING
+                    ScopeTiming.RecordScope("Settings.StreamReader", sw);
+#endif
                     ApplySimSettings(settings);
-                    //ScopeTiming.RecordScope("Settings.Apply", sw);
+#if TIMING
+                    ScopeTiming.RecordScope("Settings.Apply", sw);
+#endif
                 }
                 ctxt.Response.OutputStream.Close();
 #if DEBUG

@@ -4,12 +4,13 @@
 #include "ScopeTiming.h"
 
 Simulation* sim = nullptr;
-auto particlesBuffer = new std::array<char, 1024 * 1024>();
 
 void StartSimulation()
 {
 	sim = new Simulation();
-	ScopeTiming::GetObj().Init(false);
+#ifdef TIMING
+	ScopeTiming::GetObj().Init(true);
+#endif
 }
 
 void ApplySimSettings(const char* settings)
@@ -20,7 +21,7 @@ void ApplySimSettings(const char* settings)
 std::string simState;
 const char* GetSimState()
 {
-	sim->ToString(simState, *particlesBuffer);
+	sim->ToString(simState);
 	return simState.c_str();
 }
 

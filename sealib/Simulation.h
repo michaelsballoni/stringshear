@@ -119,35 +119,42 @@ public:
         }
     }
 
-    void ToString(std::string& str, std::array<char, 1024 * 1024>& particlesBuffer)
+    void ToString(std::string& str)
     {
+#ifdef TIMING
         auto sw = ScopeTiming::GetObj().StartTiming();
+#endif
         str.clear();
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("Simulation.Clear", sw);
-
+#endif
         CSLock lock(m_mutex);
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("Simulation.Lock", sw);
-
+#endif
         str += "time:" + std::to_string(m_time) + "\n";
 
         str += "maxPosTime:" + std::to_string(m_maxPosTime) + "\n";
         str += "maxVelTime:" + std::to_string(m_maxVelTime) + "\n";
         str += "maxAclTime:" + std::to_string(m_maxAclTime) + "\n";
         str += "maxPunchTime:" + std::to_string(m_maxPunchTime) + "\n";
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("Simulation.Stuff", sw);
-
-        AppendString("string:", str, particlesBuffer, m_string);
-        AppendString("maxPosString:", str, particlesBuffer, m_maxPosString);
-        AppendString("maxVelString:", str, particlesBuffer, m_maxVelString);
-        AppendString("maxAclString:", str, particlesBuffer, m_maxAclString);
-        AppendString("maxPunchString:", str, particlesBuffer, m_maxPunchString);
+#endif
+        AppendString("string:", str, m_string);
+        AppendString("maxPosString:", str, m_maxPosString);
+        AppendString("maxVelString:", str, m_maxVelString);
+        AppendString("maxAclString:", str, m_maxAclString);
+        AppendString("maxPunchString:", str, m_maxPunchString);
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("Simulation.AppendStrings", sw);
+#endif
     }
 
-    static void AppendString(const char* name, std::string& str, std::array<char, 1024 * 1024>& particlesBuffer, const Stringy& stringy)
+    static void AppendString(const char* name, std::string& str, const Stringy& stringy)
     {
         str += name;
-        stringy.AppendToString(str, particlesBuffer);
+        stringy.AppendToString(str);
         str += '\n';
     }
 
@@ -225,7 +232,9 @@ private:
         if (delayMs >= 0)
             std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
 
+#ifdef TIMING
         auto sw = ScopeTiming::GetObj().StartTiming();
+#endif
         CSLock lock(m_mutex);
 
         m_simulationCycle++;
@@ -295,8 +304,9 @@ private:
         }
 
         m_time += m_timeSlice;
-
+#ifdef TIMING
         ScopeTiming::GetObj().RecordScope("Update", sw);
+#endif
     }
 
     void Reset()
