@@ -22,7 +22,7 @@ private:
 
     int m_delayMs = 0; // negative means flat-out
     int m_delayMod = 0;
-    long m_simulationCycle = 0;
+    uint64_t m_simulationCycle = 0;
 
     double m_timeSlice = 0.0;
     double m_tension = 0.0;
@@ -164,6 +164,7 @@ public:
         CSLock lock(m_mutex);
         std::string summary =
             "time: " + std::to_string(m_time) +
+            "\ncycles: " + std::to_string(m_simulationCycle) +
             "\npos: " + std::to_string(m_maxPosString.GetMaxPos()) +
             "\nvel: " + std::to_string(m_maxVelString.GetMaxVel()) +
             "\nacl: " + std::to_string(m_maxAclString.GetMaxAcl()) +

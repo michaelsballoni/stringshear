@@ -78,16 +78,17 @@ namespace StringShear
                 }
 
                 double time = newDict["time"];
+                double cycles = newDict["cycles"];
 
                 string timestamp = DateTime.Now.ToString("yyyy/MM/dd-HH-mm-ss");
-                Console.WriteLine("{0}: Time: {1}", timestamp, time);
+                Console.WriteLine("{0}: Time: {1} - Cycles: {2}", timestamp, time, cycles);
 
                 if (newDict.ContainsKey("reset"))
                 {
                     Console.WriteLine("\nRESET!!!\n");
                     foreach (string key in sm_lastStats.Keys)
                     {
-                        if (key == "time" || key == "reset")
+                        if (key == "time" || key == "reset" || key == "cycles")
                             continue;
                         else
                             sm_lastStats[key] = 0.0;
@@ -99,13 +100,13 @@ namespace StringShear
                 {
                     foreach (var kvp in newDict)
                     {
-                        if (kvp.Key == "time" || kvp.Key == "reset")
+                        if (kvp.Key == "time" || kvp.Key == "reset" || kvp.Key == "cycles")
                             continue;
 
                         if (Math.Abs(kvp.Value) > Math.Abs(sm_lastStats[kvp.Key]))
                         {
                             string newMaxStr = 
-                                $"{timestamp} - Old Max: {sm_lastStats[kvp.Key]} - New Max: {kvp.Key}: {kvp.Value} - At: {time}";
+                                $"{timestamp} - Old Max: {sm_lastStats[kvp.Key]} - New Max: {kvp.Key}: {kvp.Value}";
                             sm_output.WriteLine(newMaxStr);
                             Console.WriteLine(newMaxStr);
                             anyNewMax = true;
@@ -118,6 +119,7 @@ namespace StringShear
                     Console.WriteLine(summaryStr);
                     Console.WriteLine();
 
+                    sm_output.WriteLine(summaryStr);
                     sm_output.WriteLine();
                 }
 
