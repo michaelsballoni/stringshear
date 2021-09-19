@@ -21,6 +21,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "seasvr", "seasvr\seasvr.csp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "seadll", "seadll\seadll.vcxproj", "{08B715B1-C311-4D6F-839B-0059407F2D28}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "sealib", "sealib\", "{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_64407"
+		Debug.AspNetCompiler.PhysicalPath = "sealib\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64407\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_64407"
+		Release.AspNetCompiler.PhysicalPath = "sealib\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64407\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "64407"
+		SlnRelativePath = "sealib\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +112,18 @@ Global
 		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x64.Build.0 = Release|Win32
 		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x86.ActiveCfg = Release|Win32
 		{08B715B1-C311-4D6F-839B-0059407F2D28}.Release|x86.Build.0 = Release|Win32
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Debug|x64.Build.0 = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Release|x64.ActiveCfg = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Release|x64.Build.0 = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Release|x86.ActiveCfg = Debug|Any CPU
+		{D496EC70-C393-4AD3-A7BF-AC0A6611E4E2}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

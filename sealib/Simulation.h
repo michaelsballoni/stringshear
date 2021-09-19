@@ -15,6 +15,7 @@ public:
     const double cStringConstant = 0.03164; // magic number
     const double cStringLength = 1.0; // meter
     const double cOscillatorAmplitude = 0.001; // mm
+    const double cResonantTension = 399565; // magic number
 
 private:
     bool m_bPaused = true;

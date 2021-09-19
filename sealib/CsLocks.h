@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef WIN32
 #include <windows.h>
 
 class CSection
@@ -24,3 +25,8 @@ public:
 private:
 	CSection& m_cs;
 };
+#else
+#include <mutex>
+typedef std::recursive_mutex CSection;
+typedef std::lock_guard<std::recursive_mutex> CSLock;
+#endif

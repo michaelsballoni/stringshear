@@ -11,6 +11,7 @@
 #include <chrono>
 #include <exception>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <unordered_map>
