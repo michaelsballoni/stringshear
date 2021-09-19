@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Threading;
@@ -29,11 +30,25 @@ namespace StringShear
             return Marshal.PtrToStringAnsi(ptr);
         }
 
+        static Dictionary<string, double> sm_lastStats = new Dictionary<string, double>();
+
+        static StreamWriter sm_output = 
+            new StreamWriter
+            (
+                File.Open
+                (
+                    "output.txt", 
+                    FileMode.OpenOrCreate, 
+                    FileAccess.Write, 
+                    FileShare.Read
+                )
+            );
+
         static void RunStats()
         {
             while (true)
             {
-                Thread.Sleep(2 * 1000);
+                Thread.Sleep(5 * 1000);
 #if TIMING
                 string seaTiming = GetString(GetTimingSummary());
                 string svrTiming = ScopeTiming.Summary;
@@ -52,10 +67,64 @@ namespace StringShear
                 if (timing != "")
                     timing += '\n';
 
-                Console.WriteLine(timing);
+                Console.WriteLine(timing)
+#else
+                string summaryStr = GetString(GetSimSummary());
+                var newDict = new Dictionary<string, double>();
+                foreach (string str in summaryStr.Split('\n'))
+                {
+                    int idx = str.IndexOf(':');
+                    newDict.Add(str.Substring(0, idx), double.Parse(str.Substring(idx + 1).Trim()));
+                }
+
+                double time = newDict["time"];
+
+                string timestamp = DateTime.Now.ToString("yyyy/MM/dd-HH-mm-ss");
+                Console.WriteLine("{0}: Time: {1}", timestamp, time);
+
+                if (newDict.ContainsKey("reset"))
+                {
+                    Console.WriteLine("\nRESET!!!\n");
+                    foreach (string key in sm_lastStats.Keys)
+                    {
+                        if (key == "time" || key == "reset")
+                            continue;
+                        else
+                            sm_lastStats[key] = 0.0;
+                    }
+                }
+
+                bool anyNewMax = false;
+                if (sm_lastStats.Count > 0)
+                {
+                    foreach (var kvp in newDict)
+                    {
+                        if (kvp.Key == "time" || kvp.Key == "reset")
+                            continue;
+
+                        if (Math.Abs(kvp.Value) > Math.Abs(sm_lastStats[kvp.Key]))
+                        {
+                            string newMaxStr = 
+                                $"{timestamp} - Old Max: {sm_lastStats[kvp.Key]} - New Max: {kvp.Key}: {kvp.Value} - At: {time}";
+                            sm_output.WriteLine(newMaxStr);
+                            Console.WriteLine(newMaxStr);
+                            anyNewMax = true;
+                        }
+                    }
+                }
+
+                if (anyNewMax)
+                {
+                    Console.WriteLine(summaryStr);
+                    Console.WriteLine();
+
+                    sm_output.WriteLine();
+                }
+
+                sm_output.Flush();
+
+                sm_lastStats = newDict;
 #endif
-                Console.WriteLine(GetString(GetSimSummary()));
-                Console.WriteLine();
             }
         }
 
@@ -69,6 +138,7 @@ namespace StringShear
             Console.WriteLine("done!");
 
             Console.Write("Setting up server...");
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
             HttpListener listener = new HttpListener();
             listener.Prefixes.Add($"http://localhost:9914/");
             listener.Start();

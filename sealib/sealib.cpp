@@ -3,38 +3,47 @@
 #include "Simulation.h"
 #include "ScopeTiming.h"
 
-Simulation* sim = nullptr;
+Simulation* g_pSim = nullptr;
 
 void StartSimulation()
 {
-	sim = new Simulation();
+	g_pSim = new Simulation();
 #ifdef TIMING
 	ScopeTiming::GetObj().Init(true);
 #endif
 }
 
+bool g_anyReset = false;
 void ApplySimSettings(const char* settings)
 {
-	sim->ApplySettings(settings);
+	if (strstr(settings, "reset") == settings) // starts with
+		g_anyReset = true;
+
+	g_pSim->ApplySettings(settings);
 }
 
-std::string simState;
+std::string g_simStateStr;
 const char* GetSimState()
 {
-	sim->ToString(simState);
-	return simState.c_str();
+	g_pSim->ToString(g_simStateStr);
+	return g_simStateStr.c_str();
 }
 
-std::string timingSummary;
+std::string g_timingSummaryStr;
 const char* GetTimingSummary()
 {
-	timingSummary = ScopeTiming::GetObj().GetSummary();
-	return timingSummary.c_str();
+	g_timingSummaryStr = ScopeTiming::GetObj().GetSummary();
+	return g_timingSummaryStr.c_str();
 }
 
-std::string simSummary;
+std::string g_simSummaryStr;
 const char* GetSimSummary()
 {
-	simSummary = sim->ToSummary();
-	return simSummary.c_str();
+	g_simSummaryStr = g_pSim->ToSummary();
+	if (g_anyReset)
+	{
+		g_simSummaryStr += "\nreset: 1";
+		g_anyReset = false;
+	}
+	return g_simSummaryStr.c_str();
 }
