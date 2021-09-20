@@ -19,3 +19,5 @@ Then press the Run button, and observe the wave pattern.
 Next add 30 to the "right enabled" list, press the Reset button, and press the Run button.
 
 Observe a more interesting pattern appear.
+
+Check out more details on this project at [Code Project](https://www.codeproject.com/Articles/5312296/StringShear-A-Science-Project-Adventure-in-Csharp)
