@@ -1,6 +1,6 @@
 StringShear is a Simple Harmonic Motion on a String simulation
 
-![Screenshot](assets/screen.png)
+![Screenshot](/assets/screen.png)
 
 It consists of C++ and C# components:
 - app: C# WinForms program for visualizing and controlling the simulation
