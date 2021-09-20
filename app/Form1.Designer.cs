@@ -379,11 +379,11 @@
             this.settingsGroup.Controls.Add(this.groupBox1);
             this.settingsGroup.Controls.Add(this.resetButton);
             this.settingsGroup.Controls.Add(this.pauseRunButton);
-            this.settingsGroup.Location = new System.Drawing.Point(849, 2);
+            this.settingsGroup.Location = new System.Drawing.Point(857, 2);
             this.settingsGroup.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.settingsGroup.Name = "settingsGroup";
             this.settingsGroup.Padding = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.settingsGroup.Size = new System.Drawing.Size(391, 906);
+            this.settingsGroup.Size = new System.Drawing.Size(383, 906);
             this.settingsGroup.TabIndex = 2;
             this.settingsGroup.TabStop = false;
             this.settingsGroup.Text = "Settings";

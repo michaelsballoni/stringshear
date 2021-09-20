@@ -176,9 +176,9 @@ namespace StringShear
 
             g.Clear(Color.White);
 
-            int padding = 5;
+            int padding = 10;
             int rectCount = 5;
-            int width = ClientRectangle.Width - settingsGroup.Width - padding * 2;
+            int width = displayGroup.Width - padding * 2;
             int height = (ClientRectangle.Height - padding * (rectCount + 1)) / rectCount;
 
             Dictionary<string, string> dict = new Dictionary<string, string>();
@@ -529,9 +529,7 @@ namespace StringShear
                 BufferedGraphicsManager.Current.MaximumBuffer = new Size(displayGroup.Width + 1, displayGroup.Height + 1);
                 m_bufferedGraphics = BufferedGraphicsManager.Current.Allocate(displayGroup.CreateGraphics(), new Rectangle(0, 0, displayGroup.Width, displayGroup.Height));
             }
-            catch
-            {
-            }
+            catch { }
 
             lastFormWidth = Width;
 

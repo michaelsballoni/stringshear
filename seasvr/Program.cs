@@ -37,7 +37,7 @@ namespace StringShear
             (
                 File.Open
                 (
-                    "output.txt", 
+                    $"output-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.txt", 
                     FileMode.OpenOrCreate, 
                     FileAccess.Write, 
                     FileShare.Read
