@@ -1,0 +1,25 @@
+//
+// C#
+//
+Simulation.AppendStrings -> 1984 hits - 21478 ms total -> 10.8256 ms avg // 3X slower
+Simulation.Lock -> 1984 hits - 132564 ms total -> 66.81644 ms avg // 1.7X slower
+Stringy.ToString.Particles -> 9920 hits - 19905 ms total -> 2.0065 ms avg // 3X slower
+
+Output.StreamWriter -> 1984 hits - 16195 ms total -> 8.16298 ms avg // 1.2X slower
+Output.ToString -> 1984 hits - 154508 ms total -> 77.87684 ms avg // 1.8X slower
+
+Update -> 7768502 hits - 205235 ms total -> 0.02642 ms avg // 2X slower
+
+//
+// C++, Windows critical sections, std::mutex was inconsistent and about the same, std::recursive_mutex was really bad
+//
+Simulation.AppendStrings -> 3781 hits - 12345.393000 ms total -> 3.265113 ms avg
+Simulation.Lock -> 3781 hits - 149573.137000 ms total -> 39.559148 ms
+String.ToString.Particles -> 18905 hits - 12056.123000 ms total -> 0.637721 ms avg
+
+Output.StreamWriter -> 3781 hits - 25779 ms total -> 6.81813 ms avg
+Output.ToString -> 3781 hits - 165159 ms total -> 43.68125 ms avg
+
+Update -> 26866573 hits - 412475.618075 ms total -> 0.015353 ms avg 
+// VERY IMPORTANT: C++ simulation runs 2X faster than C#!  
+// Serialization is fun, but this is the bottom line
