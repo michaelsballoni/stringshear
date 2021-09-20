@@ -9,3 +9,13 @@ It consists of C++ and C# components:
 - seadll: Windows C++ DLL project that wraps sealib for communication with seasvr
 
 The project is built using Visual Studio 2019.  The C# components use .NET 5.0.
+
+To run a simulation, execute the seasvr program, then run the app program.
+
+Add a frequency to the "left enabled" list of oscillators.  Try 20.
+
+Then press the Run button, and observe the wave pattern.
+
+Next add 30 to the "right enabled" list, press the Reset button, and press the Run button.
+
+Observe a more interesting pattern appear.
