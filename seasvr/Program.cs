@@ -67,7 +67,7 @@ namespace StringShear
                 if (timing != "")
                     timing += '\n';
 
-                Console.WriteLine(timing)
+                Console.WriteLine(timing);
 #else
                 string summaryStr = GetString(GetSimSummary());
                 var newDict = new Dictionary<string, double>();

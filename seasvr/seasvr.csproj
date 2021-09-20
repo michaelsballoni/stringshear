@@ -13,6 +13,7 @@
     <WarningsAsErrors />
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <OutputPath>C:\git\stringshear\Debug\</OutputPath>
+    <DefineConstants>TRACE;TIMING</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,10 +22,15 @@
     <WarningsAsErrors />
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <OutputPath>C:\git\stringshear\Release\</OutputPath>
+    <DefineConstants>TRACE;TIMING</DefineConstants>
   </PropertyGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="xcopy /Y $(SolutionDir)$(ConfigurationName)\sealib.dll $(OutDir)" />
   </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\sharplib\sharplib.csproj" />
+  </ItemGroup>
 
 </Project>

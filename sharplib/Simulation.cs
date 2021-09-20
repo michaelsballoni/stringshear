@@ -96,10 +96,10 @@ namespace StringShear
                         case "justHalfPulse": m_bJustHalfPulse = bool.Parse(kvp.Value); break;
                         case "outOfPhase": m_outOfPhase = double.Parse(kvp.Value); break;
                         case "rightFrequencies":
-                            m_rightFrequencies = kvp.Value.Split(',').Select(x => double.Parse(x)).ToArray();
+                            m_rightFrequencies = kvp.Value.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => double.Parse(x)).ToArray();
                             break;
                         case "leftFrequencies":
-                            m_leftFrequencies = kvp.Value.Split(',').Select(x => double.Parse(x)).ToArray();
+                            m_leftFrequencies = kvp.Value.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(x => double.Parse(x)).ToArray();
                             break;
                         default: throw new Exception("Unknown setting: " + kvp.Key);
                     }
